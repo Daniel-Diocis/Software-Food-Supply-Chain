@@ -21,13 +21,16 @@ class FinestraPrincipale(QMainWindow):
         self.ui.bt_registrati_registrati.clicked.connect(self.registra_utente)
         self.ui.bt_accedi_accedi.clicked.connect(self.login_utente)
         self.ui.bt_logout.clicked.connect(self.effettua_logout)
+        self.ui.bt_modProfilo_salva.clicked.connect(self.modifica_profilo)
         
-        # connessione bottoni a finestre
+        # connessione bottoni alle pagine
         self.ui.bt_welcome_accedi.clicked.connect(lambda: self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_login))
         self.ui.bt_welcome_registrati.clicked.connect(lambda: self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_register))
         self.ui.bt_accedi_registrati.clicked.connect(lambda: self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_register))
         self.ui.bt_registrati_accedi.clicked.connect(lambda: self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_login))
-        
+        self.ui.bt_home.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_home))
+        self.ui.bt_profilo.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_profilo))
+        self.ui.bt_profilo_modifica.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_modProfilo))
         
     def registra_utente(self):
         email = self.ui.register_emailfield.text().strip()
@@ -113,6 +116,18 @@ class FinestraPrincipale(QMainWindow):
                 self.ui.label_home_nft.setText(str(utente['nft']))
                 self.ui.label_home_token.setText(str(utente['token']))
                 self.ui.label_home_sustainability.setText(str(utente['sustainability']))
+                # Riempi la pagina profilo
+                self.ui.label_profilo_email.setText(utente['email'])
+                self.ui.label_profilo_password.setText("●●●●●●")
+                self.ui.label_profilo_iva.setText(utente['iva'])
+                self.ui.label_profilo_nome.setText(utente['nome'])
+                self.ui.label_profilo_indirizzo.setText(utente['indirizzo'])
+                self.ui.label_profilo_telefono.setText(utente['telefono'])
+                self.ui.label_profilo_ragionesociale.setText(utente['ragione_sociale'])
+                # Riempi la pagina modProfilo
+                self.ui.editText_modProfilo_emailfield.setText(utente['email'])
+                self.ui.editText_modProfilo_indirizzofield.setText(utente['indirizzo'])
+                self.ui.editText_modProfilo_telefonofield.setText(utente['telefono'])
                 # Pulisci i field del login una volta entrato
                 self.ui.login_emailfield.setText("")
                 self.ui.login_passwordfield.setText("")
@@ -136,6 +151,35 @@ class FinestraPrincipale(QMainWindow):
 
         # Torna alla schermata di login
         self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_welcome)
+        
+    def modifica_profilo(self):
+        utente = self.utente_loggato
+        email = self.ui.editText_modProfilo_emailfield.text().strip()
+        indirizzo = self.ui.editText_modProfilo_indirizzofield.text().strip()
+        telefono = self.ui.editText_modProfilo_telefonofield.text().strip()
+        vecchiaPassword = self.ui.editText_modProfilo_vecchiaPasswordfield.text().strip()
+        nuovaPassword = self.ui.editText_modProfilo_nuovaPasswordfield.text().strip()
+        
+        # Controllo se la vecchia password corrisponde
+        if not bcrypt.checkpw(vecchiaPassword.encode('utf-8'), utente['password']):
+            self.ui.modProfilo_signalError.setText("La vecchia password non corrisponde")
+            return
+        
+        # Se viene inserita una nuova password, la criptiamo
+        nuova_password_hash = bcrypt.hashpw(nuovaPassword.encode('utf-8'), bcrypt.gensalt()) if nuovaPassword else None
+
+        # Aggiornamento nel database
+        aggiornato = self.database.modifica_utente(
+            email=email,
+            nuovo_indirizzo=indirizzo,
+            nuovo_telefono=telefono,
+            nuova_password=nuova_password_hash
+        )
+
+        if aggiornato:
+            self.ui.modProfilo_signalError.setText("Profilo aggiornato con successo")
+        else:
+            self.ui.modProfilo_signalError.setText("Errore durante l'aggiornamento del profilo")
         
         
 if __name__ == "__main__":

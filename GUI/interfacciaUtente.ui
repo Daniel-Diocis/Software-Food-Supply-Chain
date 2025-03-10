@@ -2438,7 +2438,7 @@ QSpinBox {
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="modProfilo_emailfield">
+               <widget class="QLineEdit" name="editText_modProfilo_emailfield">
                 <property name="styleSheet">
                  <string notr="true">background-color:rgba(0,0,0,0);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
@@ -2486,7 +2486,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="modProfilo_indirizzofield">
+               <widget class="QLineEdit" name="editText_modProfilo_indirizzofield">
                 <property name="styleSheet">
                  <string notr="true">background-color:rgba(0,0,0,0);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
@@ -2534,7 +2534,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="modProfilo_telefonofield">
+               <widget class="QLineEdit" name="editText_modProfilo_telefonofield">
                 <property name="styleSheet">
                  <string notr="true">background-color:rgba(0,0,0,0);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
@@ -2582,7 +2582,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="modProfilo_vecchiaPasswordfield">
+               <widget class="QLineEdit" name="editText_modProfilo_vecchiaPasswordfield">
                 <property name="styleSheet">
                  <string notr="true">background-color:rgba(0,0,0,0);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
@@ -2633,7 +2633,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="modProfilo_nuovaPasswordfield">
+               <widget class="QLineEdit" name="editText_modProfilo_nuovaPasswordfield">
                 <property name="styleSheet">
                  <string notr="true">background-color:rgba(0,0,0,0);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
@@ -2684,7 +2684,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="modProfilo_confermaNuovaPasswordfield">
+               <widget class="QLineEdit" name="editText_modProfilo_confermaNuovaPasswordfield">
                 <property name="styleSheet">
                  <string notr="true">background-color:rgba(0,0,0,0);
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
@@ -2710,17 +2710,21 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_62">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QLabel" name="modProfilo_signalError">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
