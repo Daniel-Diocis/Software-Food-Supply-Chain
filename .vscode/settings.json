@@ -1,0 +1,7 @@
+{
+    {
+        "python.analysis.extraPaths": [
+        "/Users/dani_d17/Documents/GitHub/Software-Gestionale-Magazzino/.venv/lib/python3.13/site-packages"
+    ]
+    }
+}
