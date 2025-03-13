@@ -160,8 +160,8 @@ class FinestraPrincipale(QMainWindow):
         
     def modifica_profilo(self):
         nuova_email = self.ui.editText_modProfilo_emailfield.text().strip()
-        indirizzo = self.ui.editText_modProfilo_indirizzofield.text().strip()
-        telefono = self.ui.editText_modProfilo_telefonofield.text().strip()
+        nuovo_indirizzo = self.ui.editText_modProfilo_indirizzofield.text().strip()
+        nuovo_telefono = self.ui.editText_modProfilo_telefonofield.text().strip()
         vecchia_password = self.ui.editText_modProfilo_vecchiaPasswordfield.text().strip()
         nuova_password = self.ui.editText_modProfilo_nuovaPasswordfield.text().strip()
         conferma_nuova_password = self.ui.editText_modProfilo_confermaNuovaPasswordfield.text().strip()
@@ -174,14 +174,17 @@ class FinestraPrincipale(QMainWindow):
         aggiornato = self.database.modifica_utente(
             vecchia_password=vecchia_password,
             nuovo_nome=None,
-            nuovo_indirizzo=indirizzo,
-            nuovo_telefono=telefono,
+            nuovo_indirizzo=nuovo_indirizzo,
+            nuovo_telefono=nuovo_telefono,
             nuova_password=nuova_password if nuova_password else None,
             nuova_email=nuova_email
         )
 
         if aggiornato:
             self.ui.modProfilo_signalError.setText("Profilo aggiornato con successo")
+            self.ui.editText_modProfilo_emailfield.setText(nuova_email)
+            self.ui.editText_modProfilo_indirizzofield.setText(nuovo_indirizzo)
+            self.ui.editText_modProfilo_telefonofield.setText(nuovo_telefono)
             self.ui.editText_modProfilo_vecchiaPasswordfield.setText("")
             self.ui.editText_modProfilo_nuovaPasswordfield.setText("")
             self.ui.editText_modProfilo_confermaNuovaPasswordfield.setText("")
