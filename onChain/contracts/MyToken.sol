@@ -24,4 +24,6 @@ contract MyToken is ERC20, Ownable {
             _burn(to, absAmount);
         }
     }
+
+    function balanceOf(address account) public view returns (uint256)
 }
