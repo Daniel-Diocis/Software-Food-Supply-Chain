@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from PyQt5 import QtWidgets, uic
 from onChain import MyTokenContract, BlockchainConnector
 from interface import Ui_MainWindow
+from connessione2_sqlite import DatabaseConnector
 import re  # Per validazione dell'indirizzo
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -13,8 +14,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
-        self.connector = None  # Non inizializzo subito il connettore
-        contract_address = "0xAF87fa6a2DF3501d77c0F8F05195d4f4b50aA897"  # Indirizzo del contratto creato
+        self.database = DatabaseConnector()
+        
+        self.connector = None  # Non inizializzo subito il connettore per gestire eventuali errori
+        contract_address = "0xAF87fa6a2DF3501d77c0F8F05195d4f4b50aA897"  # Indirizzo del contratto creato (CREATED CONTRACT ADDRESS di quando sia crea il contratto)
         try:
             self.connector = BlockchainConnector(
                 "http://127.0.0.1:7545",
@@ -29,21 +32,16 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             self.ui.statusLabel.setText(f"Errore nella connessione: {str(e)}")
 
-
+        # Connessione dei bottoni alle funzioni
         self.ui.mintButton.clicked.connect(self.mint_tokens)
         self.ui.checkBalanceButton.clicked.connect(self.check_balance)        
 
 
     def mint_tokens(self):
-        address = self.ui.addressInput.text().strip()
+        id = self.ui.addressInput.text().strip()
         amount_str = self.ui.amountInput.text().strip()
         
-        
-
-        #print(f"Indirizzo inserito: '{address}'")
-        #print(f"Importo inserito: '{amount_str}'")
-        #print(f"Tipo di amount_str: {type(amount_str)}")
-        #print(f"Rappresentazione di amount_str: '{amount_str}'")
+        address = self.database.get_address(id)
 
         # Validazione dell'indirizzo Ethereum
         if not self.is_valid_address(address):
@@ -51,7 +49,6 @@ class MainWindow(QtWidgets.QMainWindow):
             return
 
         # Verifica se amount_str è un numero valido prima della conversione
-        #print(f"amount_str.isdigit() prima della condizione: {amount_str.isdigit()}") # AGGIUNGI QUESTA LINEA
         if not amount_str.isdigit():
             self.ui.statusLabel.setText("Errore: L'importo deve essere un numero valido.")
             print(f"Errore: '{amount_str}' non è un numero valido.")
@@ -76,7 +73,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.statusLabel.setText(f"Errore: {str(e)}")
 
     def check_balance(self):
-        address = self.ui.addressInput.text().strip()
+        id = self.ui.addressInput.text().strip()
+        
+        address = self.database.get_address(id)
 
         if not self.is_valid_address(address):
             self.ui.balanceLabel.setText("Errore: Indirizzo Ethereum non valido.")

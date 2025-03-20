@@ -1,26 +1,15 @@
 import sqlite3
 
 class DatabaseConnector:
-    def __init__(self, wallet):
-        self.db_file = wallet
+    def __init__(self):
+        self.connessione = sqlite3.connect('../wallet.db')
 
-    def connect(self):
-        return sqlite3.connect(self.db_file)
-
-    def get_balance(self, address):
-        conn = self.connect()
-        cursor = conn.cursor()
-        cursor.execute("SELECT balance FROM wallets WHERE address = ?", (address,))
+    def get_address(self, id):
+        cursor = self.connessione.cursor()
+        cursor.execute("SELECT address FROM wallets WHERE id = ?", (id,))
         result = cursor.fetchone()
-        conn.close()
+        cursor.close()
         if result:
             return result[0]
         else:
-            return 0
-
-    def update_balance(self, address, new_balance):
-        conn = self.connect()
-        cursor = conn.cursor()
-        cursor.execute("UPDATE wallets SET balance = ? WHERE address = ?", (new_balance, address))
-        conn.commit()
-        conn.close()
+            return 
