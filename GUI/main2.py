@@ -14,19 +14,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         
         self.connector = None  # Non inizializzo subito il connettore
-        self.contract = None   # Lo inizializzerò dopo
-        
-        self.ui.connectButton.clicked.connect(self.connect_to_contract)
-        self.ui.mintButton.clicked.connect(self.mint_tokens)
-        self.ui.checkBalanceButton.clicked.connect(self.check_balance)
-        
-    def connect_to_contract(self):
-        contract_address = self.ui.addressInput.text().strip()
-
-        if not self.is_valid_address(contract_address):
-            self.ui.statusLabel.setText("Errore: Indirizzo del contratto non valido.")
-            return
-
+        contract_address = "0xAF87fa6a2DF3501d77c0F8F05195d4f4b50aA897"  # Indirizzo del contratto creato
         try:
             self.connector = BlockchainConnector(
                 "http://127.0.0.1:7545",
@@ -41,11 +29,12 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             self.ui.statusLabel.setText(f"Errore nella connessione: {str(e)}")
 
+
+        self.ui.mintButton.clicked.connect(self.mint_tokens)
+        self.ui.checkBalanceButton.clicked.connect(self.check_balance)        
+
+
     def mint_tokens(self):
-        if not self.connector:
-            self.ui.statusLabel.setText("Errore: Connettiti prima a un contratto.")
-            return
-        
         address = self.ui.addressInput.text().strip()
         amount_str = self.ui.amountInput.text().strip()
         
@@ -87,9 +76,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.statusLabel.setText(f"Errore: {str(e)}")
 
     def check_balance(self):
-        if not self.connector:
-            self.ui.balanceLabel.setText("Errore: Connettiti prima a un contratto.")
-            return
         address = self.ui.addressInput.text().strip()
 
         if not self.is_valid_address(address):

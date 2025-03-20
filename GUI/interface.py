@@ -25,9 +25,6 @@ class Ui_MainWindow(object):
         self.amountInput = QtWidgets.QLineEdit(self.centralwidget)
         self.amountInput.setObjectName("amountInput")
         self.verticalLayout.addWidget(self.amountInput)
-        self.connectButton = QtWidgets.QPushButton(self.centralwidget)
-        self.connectButton.setObjectName("connectButton")
-        self.verticalLayout.addWidget(self.connectButton)
         self.mintButton = QtWidgets.QPushButton(self.centralwidget)
         self.mintButton.setObjectName("mintButton")
         self.verticalLayout.addWidget(self.mintButton)
@@ -48,7 +45,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.connectButton.setText(_translate("MainWindow", "Button Connect"))
         self.mintButton.setText(_translate("MainWindow", "Button Minting"))
         self.checkBalanceButton.setText(_translate("MainWindow", "Button Balance"))
         self.statusLabel.setText(_translate("MainWindow", "status"))

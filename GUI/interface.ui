@@ -22,13 +22,6 @@
      <widget class="QLineEdit" name="amountInput"/>
     </item>
     <item>
-     <widget class="QPushButton" name="connectButton">
-      <property name="text">
-       <string>Button Connect</string>
-      </property>
-     </widget>
-    </item>
-    <item>
      <widget class="QPushButton" name="mintButton">
       <property name="text">
        <string>Button Minting</string>
