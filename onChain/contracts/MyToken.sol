@@ -12,6 +12,11 @@ contract MyToken is ERC20, Ownable {
         _mint(initialOwner, initialSupply); // Usa initialOwner per il mint iniziale
     }
 
+    function balanceOf(address account) public view override returns (uint256) {
+        uint256 balance = super.balanceOf(account);  // Richiamando la funzione della superclasse ERC20
+        return balance;
+    }
+
     function mint(address to, int256 amount) external onlyOwner {
         require(amount != 0, "Amount cannot be zero");
 
@@ -24,6 +29,4 @@ contract MyToken is ERC20, Ownable {
             _burn(to, absAmount);
         }
     }
-
-    function balanceOf(address account) public view returns (uint256)
 }

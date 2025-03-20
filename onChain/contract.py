@@ -6,7 +6,7 @@ class MyTokenContract:
         self.connector = connector
         self.web3 = connector.get_web3()
         self.contract = connector.get_contract()
-        self.account = self.web3.eth.accounts[1]  # Account predefinito per le transazioni
+        self.account = self.web3.eth.accounts[0]  # Account predefinito per le transazioni
         print(f"Contract loaded: {self.contract}")
         print(f"Account: {self.account}")
 
@@ -29,7 +29,7 @@ class MyTokenContract:
             #print(f"Transaction to mint tokens: {tx}")
             
             # Firma della transazione
-            signed_tx = self.web3.eth.account.sign_transaction(tx, private_key='0xf42a54c01d431762de0c0fecceba036f5776571c58ded16039edaead9280c29d')
+            signed_tx = self.web3.eth.account.sign_transaction(tx, private_key='0xbfa8471445678988529d065e2d7f4dec55a6180beffc2a4310ef1bc0db0fe754')
             #print(f"Signed transaction: {signed_tx}")
             
             # Invio della transazione firmata direttamente alla rete Ethereum
@@ -42,10 +42,12 @@ class MyTokenContract:
 
     def get_balance(self, address):
         try:
+            print(f"Chiamando balanceOf per l'indirizzo: {address}")
             balance = self.contract.functions.balanceOf(address).call()
+            print(f"Saldo di {address} nella funzione contract: {balance}")
             return balance
         except Exception as e:
-            print(f"Errore nel recupero del saldo: {str(e)}")
+            print(f"Errore nel recupero del saldo per l'indirizzo {address}: {str(e)}")
             return 0
 
     def get_total_supply(self):
