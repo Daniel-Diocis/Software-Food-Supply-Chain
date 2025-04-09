@@ -34,6 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Connessione dei bottoni alle funzioni
         self.ui.mintButton.clicked.connect(self.mint_tokens)
+        self.ui.burnButton.clicked.connect(self.burn_tokens)
         self.ui.checkBalanceButton.clicked.connect(self.check_balance)        
 
 
@@ -71,6 +72,36 @@ class MainWindow(QtWidgets.QMainWindow):
             print(f"Errore durante la conversione dell'importo: '{amount_str}'")
         except Exception as e:
             self.ui.statusLabel.setText(f"Errore: {str(e)}")
+
+    def burn_tokens(self):
+        id = self.ui.addressInput.text().strip()
+        amount_str = self.ui.amountInput.text().strip()
+
+        address = self.database.get_address(id)
+
+        if not self.is_valid_address(address):
+            self.ui.statusLabel.setText("Errore: Indirizzo Ethereum non valido.")
+            return
+
+        if not amount_str.isdigit():
+            self.ui.statusLabel.setText("Errore: L'importo deve essere un numero valido.")
+            return
+
+        try:
+            amount = int(amount_str)
+
+            if amount <= 0:
+                self.ui.statusLabel.setText("Errore: L'importo deve essere maggiore di zero.")
+                return
+
+            # Per fare il burn usiamo un valore negativo
+            burn_amount = -amount
+            tx_hash = self.contract.mint_tokens(address, burn_amount)  # Ricicliamo mint_tokens per gestire anche il burn
+
+            self.ui.statusLabel.setText(f"🔥 Token bruciati! TX hash: {tx_hash}")
+            print(f"Bruciati {amount} token per {address}")
+        except Exception as e:
+            self.ui.statusLabel.setText(f"Errore durante il burn: {str(e)}")
 
     def check_balance(self):
         id = self.ui.addressInput.text().strip()

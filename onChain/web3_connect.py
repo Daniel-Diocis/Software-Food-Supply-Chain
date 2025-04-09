@@ -5,8 +5,7 @@ import json
 class BlockchainConnector:
     def __init__(self, provider_url, contract_address, abi_path):
         self.web3 = Web3(Web3.HTTPProvider(provider_url))
-        
-        # Qui si verifica se la connessione alla blockchain è avvenuta correttamente
+
         if self.web3.is_connected():
             print("Connected to Ethereum")
         else:
@@ -14,12 +13,10 @@ class BlockchainConnector:
 
         if not self.web3.is_connected():
             raise ConnectionError("Errore nella connessione a Ganache")
-        
-        # Il metodo json.load() carica il contenuto del file e il campo ['abi'] estrae la parte che definisce l’interfaccia del contratto
+
         with open(abi_path, 'r') as abi_file:
             contract_abi = json.load(abi_file)['abi']
-            
-        # Qui viene creato un oggetto contratto (contract) che rappresenta lo smart contract Ethereum con cui si vuole interagire
+
         self.contract = self.web3.eth.contract(address=contract_address, abi=contract_abi)
 
     def get_web3(self):
@@ -31,11 +28,11 @@ class BlockchainConnector:
     def mint_tokens(self, recipient_address, amount, from_address):
         try:
             print(f"Tentativo di minting: {recipient_address}, {amount}, {from_address}")
-            
+
             tx = self.contract.functions.mint(
                 recipient_address, amount
             ).transact({'from': from_address})
-            
+
             print(f"Transazione inviata: {tx}")
 
             receipt = self.web3.eth.waitForTransactionReceipt(tx)
@@ -43,3 +40,17 @@ class BlockchainConnector:
 
         except Exception as e:
             print(f"Errore durante il minting: {e}")
+
+    def burn_tokens(self, amount, from_address):
+        try:
+            print(f"Tentativo di burn: {amount} da {from_address}")
+            
+            tx = self.contract.functions.burn(amount).transact({'from': from_address})
+            
+            print(f"Transazione di burn inviata: {tx}")
+            
+            receipt = self.web3.eth.wait_for_transaction_receipt(tx)
+            print(f"Burn completato! Ricevuta della transazione: {receipt}")
+
+        except Exception as e:
+            print(f"Errore durante il burn: {e}")
