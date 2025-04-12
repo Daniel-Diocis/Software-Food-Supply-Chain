@@ -1,10 +1,15 @@
 import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import bcrypt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QHeaderView
 from PyQt5.QtCore import  QPropertyAnimation,QEasingCurve
 from PyQt5 import QtCore, QtWidgets
 from interfacciaUtente import Ui_MainWindow
 from connessione_sqlite import Comunicazione
+from onChain import MyTokenContract, BlockchainConnector
+from connessione2_sqlite import DatabaseConnector
+import re  # Per validazione dell'indirizzo
 
 class FinestraPrincipale(QMainWindow):
     def __init__(self):
@@ -13,6 +18,27 @@ class FinestraPrincipale(QMainWindow):
         self.ui.setupUi(self)
         
         self.database = Comunicazione()
+        
+        self.connector = None  # Non inizializzo subito il connettore per gestire eventuali errori
+        contract_address = "0xAF87fa6a2DF3501d77c0F8F05195d4f4b50aA897"  # Indirizzo del contratto creato (CREATED CONTRACT ADDRESS di quando sia crea il contratto)
+        try:
+            self.connector = BlockchainConnector(
+                "http://127.0.0.1:7545",
+                contract_address,
+                os.path.abspath(
+                    os.path.join(os.path.dirname(__file__), '..', 'onChain', 'build', 'contracts', 'MyToken.json')
+                )
+            )
+
+            self.contract = MyTokenContract(self.connector)
+            self.ui.mintingLabel.setText("Connessione al contratto riuscita!")
+        except Exception as e:
+            self.ui.mintingLabel.setText(f"Errore nella connessione: {str(e)}")
+
+        # Connessione dei bottoni alle funzioni
+        self.ui.mintButton.clicked.connect(self.mint_tokens)
+        self.ui.burnButton.clicked.connect(self.burn_tokens)
+        self.ui.checkBalanceButton.clicked.connect(self.check_balance)
         
         self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_welcome)
         
@@ -31,6 +57,7 @@ class FinestraPrincipale(QMainWindow):
         self.ui.bt_home.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_home))
         self.ui.bt_profilo.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_profilo))
         self.ui.bt_profilo_modifica.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_modProfilo))
+        self.ui.bt_azioni.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_azioni))
         
     def registra_utente(self):
         email = self.ui.register_emailfield.text().strip()
@@ -84,6 +111,21 @@ class FinestraPrincipale(QMainWindow):
                 self.ui.register_ragionesocialefield.setText("")
                 self.ui.register_sustainabilitydoubleSpinBox.setValue(0)
                 self.ui.register_signalError.setText("")
+                
+                # Riempi la pagina profilo
+                self.ui.label_profilo_email.setText(utente['email'])
+                self.ui.label_profilo_password.setText("●●●●●●")  # Non mostriamo la password
+                self.ui.label_profilo_iva.setText(utente['iva'])
+                self.ui.label_profilo_nome.setText(utente['nome'])
+                self.ui.label_profilo_indirizzo.setText(utente['indirizzo'])
+                self.ui.label_profilo_telefono.setText(utente['telefono'])
+                self.ui.label_profilo_ragionesociale.setText(utente['ragione_sociale'])
+
+                # Riempi la pagina modProfilo
+                self.ui.editText_modProfilo_emailfield.setText(utente['email'])
+                self.ui.editText_modProfilo_indirizzofield.setText(utente['indirizzo'])
+                self.ui.editText_modProfilo_telefonofield.setText(utente['telefono'])
+                
             else:
                 self.ui.register_signalError.setText('Errore: Login non riuscito.')
 
@@ -126,6 +168,7 @@ class FinestraPrincipale(QMainWindow):
                     self.ui.label_profilo_indirizzo.setText(utente['indirizzo'])
                     self.ui.label_profilo_telefono.setText(utente['telefono'])
                     self.ui.label_profilo_ragionesociale.setText(utente['ragione_sociale'])
+                    self.check_balance()  # Aggiorna il saldo all'accesso
 
                     # Riempi la pagina modProfilo
                     self.ui.editText_modProfilo_emailfield.setText(utente['email'])
@@ -190,6 +233,97 @@ class FinestraPrincipale(QMainWindow):
             self.ui.editText_modProfilo_confermaNuovaPasswordfield.setText("")
         else:
             self.ui.modProfilo_signalError.setText("Errore durante l'aggiornamento del profilo")
+            
+    def mint_tokens(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        amount_str = self.ui.amountInput.text().strip()
+        
+        address = self.database.get_address(id)
+
+        # Validazione dell'indirizzo Ethereum
+        if not self.is_valid_address(address):
+            self.ui.mintingLabel.setText("Errore: Indirizzo Ethereum non valido.")
+            return
+
+        # Verifica se amount_str è un numero valido prima della conversione
+        if not amount_str.isdigit():
+            self.ui.mintingLabel.setText("Errore: L'importo deve essere un numero valido.")
+            print(f"Errore: '{amount_str}' non è un numero valido.")
+            return
+
+        # Convertire amount_str in un intero
+        try:
+            amount = int(amount_str)
+
+            if amount <= 0:
+                self.ui.mintingLabel.setText("Errore: L'importo deve essere maggiore di zero.")
+                return
+
+            # Proviamo a fare la transazione con l'importo convertito
+            tx_hash = self.contract.mint_tokens(address, amount)
+            self.ui.mintingLabel.setText(f"Transazione inviata: {tx_hash}")
+            self.check_balance()  # Aggiorna il saldo dopo la mint
+
+        except ValueError:
+            self.ui.mintingLabel.setText("Errore: L'importo deve essere un numero valido.")
+            print(f"Errore durante la conversione dell'importo: '{amount_str}'")
+        except Exception as e:
+            self.ui.mintingLabel.setText(f"Errore: {str(e)}")
+            
+    def burn_tokens(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        amount_str = self.ui.amountInput.text().strip()
+
+        address = self.database.get_address(id)
+
+        if not self.is_valid_address(address):
+            self.ui.burningLabel.setText("Errore: Indirizzo Ethereum non valido.")
+            return
+
+        if not amount_str.isdigit():
+            self.ui.burningLabel.setText("Errore: L'importo deve essere un numero valido.")
+            return
+
+        try:
+            amount = int(amount_str)
+
+            if amount <= 0:
+                self.ui.burningLabel.setText("Errore: L'importo deve essere maggiore di zero.")
+                return
+
+            # Per fare il burn usiamo un valore negativo
+            burn_amount = -amount
+            tx_hash = self.contract.mint_tokens(address, burn_amount)  # Ricicliamo mint_tokens per gestire anche il burn
+
+            self.ui.burningLabel.setText(f"🔥 Token bruciati! TX hash: {tx_hash}")
+            self.check_balance()  # Aggiorna il saldo dopo il burn
+            print(f"Bruciati {amount} token per {address}")
+        except Exception as e:
+            self.ui.burningLabel.setText(f"Errore durante il burn: {str(e)}")
+
+    def check_balance(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        
+        address = self.database.get_address(id)
+
+        if not self.is_valid_address(address):
+            self.ui.balanceLabel.setText("Errore: Indirizzo Ethereum non valido.")
+            return
+
+        try:
+            balance = self.contract.get_balance(address)
+            self.ui.balanceLabel.setText(f"Saldo: {balance / 10**18}")
+            self.ui.label_home_token.setText(f"Saldo: {balance / 10**18}")
+            print(f"Saldo dell'indirizzo {address}: {balance / 10**18} MTK")
+        except Exception as e:
+            self.ui.balanceLabel.setText(f"Errore: {str(e)}")
+
+    def is_valid_address(self, address):
+        """Verifica che l'indirizzo sia valido (inizia con 0x e ha una lunghezza di 42 caratteri)."""
+        return bool(re.match(r"^0x[a-fA-F0-9]{40}$", address))
         
         
 if __name__ == "__main__":

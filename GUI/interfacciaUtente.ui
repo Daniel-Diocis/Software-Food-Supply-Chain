@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>801</width>
+    <width>902</width>
     <height>623</height>
    </rect>
   </property>
@@ -1649,7 +1649,7 @@ QSpinBox {
         <item>
          <widget class="QStackedWidget" name="stackedWidgetInterno">
           <property name="currentIndex">
-           <number>5</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="page_home">
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -1884,26 +1884,108 @@ QSpinBox {
            </layout>
           </widget>
           <widget class="QWidget" name="page_azioni">
-           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <widget class="QLabel" name="label_31">
+             <layout class="QHBoxLayout" name="horizontalLayout_34">
+              <item>
+               <widget class="QLabel" name="label_27">
+                <property name="text">
+                 <string>Immetti il tuo address: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="addressInput">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_54">
+              <item>
+               <widget class="QLabel" name="label_31">
+                <property name="text">
+                 <string>Immetti la quantità da mintare o bruciare: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="amountInput">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="mintButton">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string>Button Minting</string>
               </property>
              </widget>
             </item>
             <item>
-             <spacer name="verticalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
+             <widget class="QLabel" name="mintingLabel">
+              <property name="text">
+               <string>minting status</string>
               </property>
-              <property name="sizeHint" stdset="0">
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="burnButton">
+              <property name="minimumSize">
                <size>
-                <width>20</width>
-                <height>441</height>
+                <width>100</width>
+                <height>40</height>
                </size>
               </property>
-             </spacer>
+              <property name="text">
+               <string>Button Burn</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="burningLabel">
+              <property name="text">
+               <string>burning status</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="checkBalanceButton">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Button Balance</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="balanceLabel">
+              <property name="text">
+               <string>balance</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

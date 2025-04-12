@@ -63,7 +63,7 @@ class Comunicazione():
         cursor.execute("""
             SELECT id, email, password, iva, nome, tipologia, 
                 indirizzo, telefono, ragione_sociale, 
-                sustainability, nft, token
+                sustainability, nft, token, address
             FROM tabella_utenti 
             WHERE id = ?
         """, (self.utente_loggato,))
@@ -84,6 +84,7 @@ class Comunicazione():
                 'sustainability': user[9],
                 'nft': user[10],
                 'token': user[11],
+                'address': user[12],
             }
         else:
             print("Errore: Utente non trovato.")
@@ -151,3 +152,13 @@ class Comunicazione():
         """ Funzione per disconnettere l'utente """
         self.utente_loggato = None
         print("Logout avvenuto con successo.")
+        
+    def get_address(self, id):
+        cursor = self.connessione.cursor()
+        cursor.execute("SELECT address FROM tabella_utenti WHERE id = ?", (id,))
+        result = cursor.fetchone()
+        cursor.close()
+        if result:
+            return result[0]
+        else:
+            return
