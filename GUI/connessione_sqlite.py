@@ -148,6 +148,21 @@ class Comunicazione():
             print(f"Errore durante la modifica del profilo: {e}")
             return False
         
+    def aggiorna_balance(self, nuovo_balance):
+        """ Aggiorna il balance dell'utente loggato """
+        if self.utente_loggato is None:
+            print("Errore: Nessun utente loggato.")
+            return False
+        cursor = self.connessione.cursor()
+        try:
+            cursor.execute("UPDATE tabella_utenti SET token = ? WHERE ID = ?", (nuovo_balance, self.utente_loggato))
+            self.connessione.commit()
+            print("Balance aggiornato con successo.")
+            return True
+        except sqlite3.Error as e:
+            print(f"Errore durante l'aggiornamento del balance: {e}")
+            return False
+        
     def logout(self):
         """ Funzione per disconnettere l'utente """
         self.utente_loggato = None

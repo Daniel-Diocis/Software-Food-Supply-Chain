@@ -315,9 +315,11 @@ class FinestraPrincipale(QMainWindow):
 
         try:
             balance = self.contract.get_balance(address)
-            self.ui.balanceLabel.setText(f"Saldo: {balance / 10**18}")
-            self.ui.label_home_token.setText(f"Saldo: {balance / 10**18}")
-            print(f"Saldo dell'indirizzo {address}: {balance / 10**18} MTK")
+            self.database.aggiorna_balance(balance/ 10**18)
+            utente = self.database.get_utente_per_id()
+            self.ui.balanceLabel.setText(f"Saldo: {utente['token']}")
+            self.ui.label_home_token.setText(f"{utente['token']}")
+            print(f"Saldo dell'indirizzo {address}: {utente['token']} MTK")
         except Exception as e:
             self.ui.balanceLabel.setText(f"Errore: {str(e)}")
 
