@@ -263,6 +263,7 @@ class FinestraPrincipale(QMainWindow):
             # Proviamo a fare la transazione con l'importo convertito
             tx_hash = self.contract.mint_tokens(address, amount)
             self.ui.mintingLabel.setText(f"Transazione inviata: {tx_hash}")
+            self.ui.burningLabel.setText(f"")
             self.check_balance()  # Aggiorna il saldo dopo la mint
 
         except ValueError:
@@ -298,6 +299,7 @@ class FinestraPrincipale(QMainWindow):
             tx_hash = self.contract.mint_tokens(address, burn_amount)  # Ricicliamo mint_tokens per gestire anche il burn
 
             self.ui.burningLabel.setText(f"🔥 Token bruciati! TX hash: {tx_hash}")
+            self.ui.mintingLabel.setText(f"")
             self.check_balance()  # Aggiorna il saldo dopo il burn
             print(f"Bruciati {amount} token per {address}")
         except Exception as e:
@@ -315,11 +317,9 @@ class FinestraPrincipale(QMainWindow):
 
         try:
             balance = self.contract.get_balance(address)
-            self.database.aggiorna_balance(balance/ 10**18)
-            utente = self.database.get_utente_per_id()
-            self.ui.balanceLabel.setText(f"Saldo: {utente['token']}")
-            self.ui.label_home_token.setText(f"{utente['token']}")
-            print(f"Saldo dell'indirizzo {address}: {utente['token']} MTK")
+            self.ui.balanceLabel.setText(f"Saldo: {balance / 10**18}")
+            self.ui.label_home_token.setText(f"Saldo: {balance / 10**18}")
+            print(f"Saldo dell'indirizzo {address}: {balance / 10**18} MTK")
         except Exception as e:
             self.ui.balanceLabel.setText(f"Errore: {str(e)}")
 
