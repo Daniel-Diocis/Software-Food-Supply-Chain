@@ -50,6 +50,24 @@ class MyTokenContract:
         except Exception as e:
             print(f"Errore nel burn: {e}")
             raise
+        
+    def transfer_tokens(self, to_address, amount):
+        amount = int(amount) * 10**18  # Converti in Wei
+
+        try:
+            tx = self.contract.functions.transfer(to_address, amount).build_transaction({
+                'from': self.account,
+                'nonce': self.web3.eth.get_transaction_count(self.account),
+                'gas': 2000000,
+                'gasPrice': self.web3.to_wei('10', 'gwei')
+            })
+
+            signed_tx = self.web3.eth.account.sign_transaction(tx, private_key='0xbfa8471445678988529d065e2d7f4dec55a6180beffc2a4310ef1bc0db0fe754')
+            tx_hash = self.web3.eth.send_raw_transaction(signed_tx.raw_transaction)
+            return self.web3.to_hex(tx_hash)
+        except Exception as e:
+            print(f"Errore nel trasferimento token: {e}")
+            raise
 
     def get_balance(self, address):
         try:

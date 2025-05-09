@@ -16,10 +16,32 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLineEdit" name="addressInput"/>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="addressLabel">
+        <property name="text">
+         <string>Address Input</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="addressInput"/>
+      </item>
+     </layout>
     </item>
     <item>
-     <widget class="QLineEdit" name="amountInput"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="amountLabel">
+        <property name="text">
+         <string>Amount Input</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="amountInput"/>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QPushButton" name="mintButton">
@@ -29,16 +51,16 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="checkBalanceButton">
+     <widget class="QPushButton" name="burnButton">
       <property name="text">
-       <string>Button Balance</string>
+       <string>Button Burn</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="burnButton">
+     <widget class="QPushButton" name="checkBalanceButton">
       <property name="text">
-       <string>Button Burn</string>
+       <string>Button Balance</string>
       </property>
      </widget>
     </item>
@@ -53,6 +75,27 @@
      <widget class="QLabel" name="balanceLabel">
       <property name="text">
        <string>balance</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="recipientLabel">
+        <property name="text">
+         <string>Recipient Input</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="recipientInput"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="transferButton">
+      <property name="text">
+       <string>Button Transfer</string>
       </property>
      </widget>
     </item>

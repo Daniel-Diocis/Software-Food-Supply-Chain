@@ -6,90 +6,74 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>902</width>
-    <height>623</height>
+    <width>964</width>
+    <height>736</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
-  </property>
-  <property name="styleSheet">
-   <string notr="true"/>
+   <string>Smart Supply Chain</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(0, 0, 0);</string>
+    <string notr="true">
+      QWidget, QStackedWidget, QFrame {
+          background-color: #0f111a;
+          color: #f0f0f0;
+          font-family: 'Segoe UI', sans-serif;
+          font-size: 12pt;
+      }
+
+      QPushButton {
+          background-color: #1e1e2f;
+          border: 1px solid #2a2d3e;
+          border-radius: 12px;
+          padding: 8px 20px;
+          color: #e1e1e1;
+          font-weight: bold;
+      }
+
+      QPushButton:hover {
+          background-color: #3e64ff;
+          color: white;
+          border: 1px solid #3e64ff;
+          
+      }
+     QLabel {
+      font-size: 12pt;
+      color: white;
+      padding: 8px 20px;
+     }
+     QLineEdit, QComboBox, QDoubleSpinBox {
+      background-color: #212121;
+      border: 1px solid #424242;
+      color: white;
+      padding: 5px;
+      font-size: 12pt;
+      border-radius: 5px;
+     }
+     QTableWidget {
+      background-color: white;
+      color: black;
+      font-size: 12pt;
+     }
+	QStackedWidget, QFrame {
+      background-color: #1E1E1E;
+     } 
+     QHeaderView::section {
+      background-color: #1E88E5;
+      color: white;
+      padding: 5px;
+      font-size: 12pt;
+     }
+    </string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_12">
     <item>
      <widget class="QStackedWidget" name="stackedWidgetEsterno">
       <property name="styleSheet">
-       <string notr="true">QFrame{
-	
-	background-color: rgb(61, 61, 61);
-}
-
-QLabel{
-font: 87 12pt &quot;Arial Black&quot;;
-background-color:#000000ff;
-color: rgb(0, 206, 151);
-border:0px solid #14C8DC;
-
-}
-
-QLineEdit{
-border:0px;
-color: rgb(255, 255, 255);
-border-bottom:2px solid  rgb(61, 61, 61);
-font: 75 12pt &quot;Times New Roman&quot;;
-
-}
-
-
-QPushButton{
-background-color: rgb(61, 61, 61);
-border-radius: 15px;
-color: rgb(255, 255, 255);
-font: 77 10pt &quot;Arial Black&quot;;
-	
-}
-
-QPushButton:hover{
-background-color: rgb(0, 206, 151);
-border-radius: 15px;
-color: rgb(0, 0, 0);
-font: 77 10pt &quot;Arial Black&quot;;
-}
-
-
-QTableWidget {
-    background-color:  rgb(255, 255, 255);
-	color: rgb(0, 0, 0);
-    gridline-color:   rgb(0, 206, 151);
-    font-size: 12pt;
-    color: #000000;
-}
-
-
-QHeaderView::section {
-    background-color:  rgb(0, 206, 151);
-    border: 1px solid   rgb(0, 0, 0);
-    font-size: 12pt;
-}
-
-
-QTableWidget QTableCornerButton::section {
-    background-color:  rgb(0, 0, 0);
-    border: 1px solid  rgb(0, 206, 151);
-}
-
-QSpinBox {
-	font: 87 12pt &quot;Arial Black&quot;;
-	background-color:#000000ff;
-	color: rgb(0, 206, 151);
-	border:0px solid #14C8DC;
-}
-</string>
+       <string notr="true">QLabel, QFrame{
+     background-color:rgba(0,0,0,0);
+}</string>
       </property>
       <property name="currentIndex">
        <number>3</number>
@@ -1441,72 +1425,7 @@ color:rgb(255, 255, 255)</string>
         <item>
          <widget class="QFrame" name="frame_navbar">
           <property name="styleSheet">
-           <string notr="true">QFrame{
-	
-	background-color: rgb(0, 0, 0);
-}
-
-QLabel{
-font: 87 12pt &quot;Arial Black&quot;;
-background-color:#000000ff;
-color: rgb(0, 206, 151);
-border:0px solid #14C8DC;
-
-}
-
-QLineEdit{
-border:0px;
-color: rgb(255, 255, 255);
-border-bottom:2px solid  rgb(61, 61, 61);
-font: 75 12pt &quot;Times New Roman&quot;;
-
-}
-
-
-QPushButton{
-background-color: rgb(61, 61, 61);
-border-radius: 15px;
-color: rgb(255, 255, 255);
-font: 77 10pt &quot;Arial Black&quot;;
-	
-}
-
-QPushButton:hover{
-background-color: rgb(0, 206, 151);
-border-radius: 15px;
-color: rgb(0, 0, 0);
-font: 77 10pt &quot;Arial Black&quot;;
-}
-
-
-QTableWidget {
-    background-color:  rgb(255, 255, 255);
-	color: rgb(0, 0, 0);
-    gridline-color:   rgb(0, 206, 151);
-    font-size: 12pt;
-    color: #000000;
-}
-
-
-QHeaderView::section {
-    background-color:  rgb(0, 206, 151);
-    border: 1px solid   rgb(0, 0, 0);
-    font-size: 12pt;
-}
-
-
-QTableWidget QTableCornerButton::section {
-    background-color:  rgb(0, 0, 0);
-    border: 1px solid  rgb(0, 206, 151);
-}
-
-QSpinBox {
-	font: 87 12pt &quot;Arial Black&quot;;
-	background-color:#000000ff;
-	color: rgb(0, 206, 151);
-	border:0px solid #14C8DC;
-}
-</string>
+           <string notr="true"/>
           </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
@@ -1649,7 +1568,7 @@ QSpinBox {
         <item>
          <widget class="QStackedWidget" name="stackedWidgetInterno">
           <property name="currentIndex">
-           <number>1</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="page_home">
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -1990,50 +1909,330 @@ QSpinBox {
            </layout>
           </widget>
           <widget class="QWidget" name="page_transazioni">
-           <layout class="QVBoxLayout" name="verticalLayout_16">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QLabel" name="label_29">
-              <property name="text">
-               <string>TextLabel</string>
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_55">
+                <item>
+                 <widget class="QLabel" name="label_202">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Immetti il tuo address: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="transaction_addressInput">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_56">
+                <item>
+                 <widget class="QLabel" name="label_203">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Immetti il suo address: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="transaction_recipientInput">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="transaction_amountInput">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>40</height>
+               </size>
               </property>
              </widget>
             </item>
             <item>
-             <spacer name="verticalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_27">
+              <item>
+               <widget class="QLabel" name="transaction_addressLabel">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>balance tuo</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="transaction_recipientLabel">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>balance recipiente</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="transferButton">
+              <property name="minimumSize">
                <size>
-                <width>20</width>
+                <width>100</width>
                 <height>40</height>
                </size>
               </property>
-             </spacer>
+              <property name="text">
+               <string>Button Transfer</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="transferLabel">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>burning status</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
           <widget class="QWidget" name="page_statistiche">
-           <layout class="QVBoxLayout" name="verticalLayout_15">
+           <layout class="QVBoxLayout" name="verticalLayout_14">
             <item>
-             <widget class="QLabel" name="label_28">
+             <layout class="QHBoxLayout" name="horizontalLayout_57">
+              <item>
+               <widget class="QLabel" name="label_204">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Immetti il tuo address: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_address">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_59">
+              <item>
+               <widget class="QLabel" name="label_32">
+                <property name="text">
+                 <string>Immetti il Token URI: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_tokenuri">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_mint">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>40</height>
+               </size>
+              </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string>Mint NFT</string>
               </property>
              </widget>
             </item>
             <item>
-             <spacer name="verticalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_60">
+              <item>
+               <widget class="QLabel" name="label_205">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Immetti il tuo address: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_from_address">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_61">
+              <item>
+               <widget class="QLabel" name="label_33">
+                <property name="text">
+                 <string>Immetti la tua chiava privata: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_private_key">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_62">
+              <item>
+               <widget class="QLabel" name="label_34">
+                <property name="text">
+                 <string>Immetti l'address del destinatario: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_transfer_to">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_63">
+              <item>
+               <widget class="QLabel" name="label_35">
+                <property name="text">
+                 <string>Immetti il Token ID: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="input_tokenid">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_transfer">
+              <property name="minimumSize">
                <size>
-                <width>20</width>
+                <width>100</width>
                 <height>40</height>
                </size>
               </property>
-             </spacer>
+              <property name="text">
+               <string>Trasferisci NFT</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_history">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Mostra Storico</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="text_output">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

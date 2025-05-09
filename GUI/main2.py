@@ -35,6 +35,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Connessione dei bottoni alle funzioni
         self.ui.mintButton.clicked.connect(self.mint_tokens)
         self.ui.burnButton.clicked.connect(self.burn_tokens)
+        self.ui.transferButton.clicked.connect(self.transfer_tokens)
         self.ui.checkBalanceButton.clicked.connect(self.check_balance)        
 
 
@@ -102,6 +103,35 @@ class MainWindow(QtWidgets.QMainWindow):
             print(f"Bruciati {amount} token per {address}")
         except Exception as e:
             self.ui.statusLabel.setText(f"Errore durante il burn: {str(e)}")
+            
+    def transfer_tokens(self):
+        id_from = self.ui.addressInput.text().strip()
+        id_to = self.ui.recipientInput.text().strip()
+        amount_str = self.ui.amountInput.text().strip()
+
+        address_from = self.database.get_address(id_from)
+        address_to = self.database.get_address(id_to)
+
+        if not self.is_valid_address(address_from) or not self.is_valid_address(address_to):
+            self.ui.statusLabel.setText("Errore: Uno degli indirizzi Ethereum non è valido.")
+            return
+
+        if not amount_str.isdigit():
+            self.ui.statusLabel.setText("Errore: L'importo deve essere un numero valido.")
+            return
+
+        try:
+            amount = int(amount_str)
+
+            if amount <= 0:
+                self.ui.statusLabel.setText("Errore: L'importo deve essere maggiore di zero.")
+                return
+
+            tx_hash = self.contract.transfer_tokens(address_to, amount)
+            self.ui.statusLabel.setText(f"✅ Token inviati! TX hash: {tx_hash}")
+        except Exception as e:
+            self.ui.statusLabel.setText(f"Errore nel trasferimento: {str(e)}")
+
 
     def check_balance(self):
         id = self.ui.addressInput.text().strip()

@@ -14,80 +14,66 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(902, 623)
-        MainWindow.setStyleSheet("")
+        MainWindow.resize(964, 736)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setStyleSheet("background-color: rgb(0, 0, 0);")
+        self.centralwidget.setStyleSheet("\n"
+"      QWidget, QStackedWidget, QFrame {\n"
+"          background-color: #0f111a;\n"
+"          color: #f0f0f0;\n"
+"          font-family: \'Segoe UI\', sans-serif;\n"
+"          font-size: 12pt;\n"
+"      }\n"
+"\n"
+"      QPushButton {\n"
+"          background-color: #1e1e2f;\n"
+"          border: 1px solid #2a2d3e;\n"
+"          border-radius: 12px;\n"
+"          padding: 8px 20px;\n"
+"          color: #e1e1e1;\n"
+"          font-weight: bold;\n"
+"      }\n"
+"\n"
+"      QPushButton:hover {\n"
+"          background-color: #3e64ff;\n"
+"          color: white;\n"
+"          border: 1px solid #3e64ff;\n"
+"          \n"
+"      }\n"
+"     QLabel {\n"
+"      font-size: 12pt;\n"
+"      color: white;\n"
+"      padding: 8px 20px;\n"
+"     }\n"
+"     QLineEdit, QComboBox, QDoubleSpinBox {\n"
+"      background-color: #212121;\n"
+"      border: 1px solid #424242;\n"
+"      color: white;\n"
+"      padding: 5px;\n"
+"      font-size: 12pt;\n"
+"      border-radius: 5px;\n"
+"     }\n"
+"     QTableWidget {\n"
+"      background-color: white;\n"
+"      color: black;\n"
+"      font-size: 12pt;\n"
+"     }\n"
+"    QStackedWidget, QFrame {\n"
+"      background-color: #1E1E1E;\n"
+"     } \n"
+"     QHeaderView::section {\n"
+"      background-color: #1E88E5;\n"
+"      color: white;\n"
+"      padding: 5px;\n"
+"      font-size: 12pt;\n"
+"     }\n"
+"    ")
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.stackedWidgetEsterno = QtWidgets.QStackedWidget(self.centralwidget)
-        self.stackedWidgetEsterno.setStyleSheet("QFrame{\n"
-"    \n"
-"    background-color: rgb(61, 61, 61);\n"
-"}\n"
-"\n"
-"QLabel{\n"
-"font: 87 12pt \"Arial Black\";\n"
-"background-color:#000000ff;\n"
-"color: rgb(0, 206, 151);\n"
-"border:0px solid #14C8DC;\n"
-"\n"
-"}\n"
-"\n"
-"QLineEdit{\n"
-"border:0px;\n"
-"color: rgb(255, 255, 255);\n"
-"border-bottom:2px solid  rgb(61, 61, 61);\n"
-"font: 75 12pt \"Times New Roman\";\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QPushButton{\n"
-"background-color: rgb(61, 61, 61);\n"
-"border-radius: 15px;\n"
-"color: rgb(255, 255, 255);\n"
-"font: 77 10pt \"Arial Black\";\n"
-"    \n"
-"}\n"
-"\n"
-"QPushButton:hover{\n"
-"background-color: rgb(0, 206, 151);\n"
-"border-radius: 15px;\n"
-"color: rgb(0, 0, 0);\n"
-"font: 77 10pt \"Arial Black\";\n"
-"}\n"
-"\n"
-"\n"
-"QTableWidget {\n"
-"    background-color:  rgb(255, 255, 255);\n"
-"    color: rgb(0, 0, 0);\n"
-"    gridline-color:   rgb(0, 206, 151);\n"
-"    font-size: 12pt;\n"
-"    color: #000000;\n"
-"}\n"
-"\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color:  rgb(0, 206, 151);\n"
-"    border: 1px solid   rgb(0, 0, 0);\n"
-"    font-size: 12pt;\n"
-"}\n"
-"\n"
-"\n"
-"QTableWidget QTableCornerButton::section {\n"
-"    background-color:  rgb(0, 0, 0);\n"
-"    border: 1px solid  rgb(0, 206, 151);\n"
-"}\n"
-"\n"
-"QSpinBox {\n"
-"    font: 87 12pt \"Arial Black\";\n"
-"    background-color:#000000ff;\n"
-"    color: rgb(0, 206, 151);\n"
-"    border:0px solid #14C8DC;\n"
-"}\n"
-"")
+        self.stackedWidgetEsterno.setStyleSheet("QLabel, QFrame{\n"
+"     background-color:rgba(0,0,0,0);\n"
+"}")
         self.stackedWidgetEsterno.setObjectName("stackedWidgetEsterno")
         self.page_welcome = QtWidgets.QWidget()
         self.page_welcome.setObjectName("page_welcome")
@@ -517,72 +503,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.page_dashboard)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
         self.frame_navbar = QtWidgets.QFrame(self.page_dashboard)
-        self.frame_navbar.setStyleSheet("QFrame{\n"
-"    \n"
-"    background-color: rgb(0, 0, 0);\n"
-"}\n"
-"\n"
-"QLabel{\n"
-"font: 87 12pt \"Arial Black\";\n"
-"background-color:#000000ff;\n"
-"color: rgb(0, 206, 151);\n"
-"border:0px solid #14C8DC;\n"
-"\n"
-"}\n"
-"\n"
-"QLineEdit{\n"
-"border:0px;\n"
-"color: rgb(255, 255, 255);\n"
-"border-bottom:2px solid  rgb(61, 61, 61);\n"
-"font: 75 12pt \"Times New Roman\";\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QPushButton{\n"
-"background-color: rgb(61, 61, 61);\n"
-"border-radius: 15px;\n"
-"color: rgb(255, 255, 255);\n"
-"font: 77 10pt \"Arial Black\";\n"
-"    \n"
-"}\n"
-"\n"
-"QPushButton:hover{\n"
-"background-color: rgb(0, 206, 151);\n"
-"border-radius: 15px;\n"
-"color: rgb(0, 0, 0);\n"
-"font: 77 10pt \"Arial Black\";\n"
-"}\n"
-"\n"
-"\n"
-"QTableWidget {\n"
-"    background-color:  rgb(255, 255, 255);\n"
-"    color: rgb(0, 0, 0);\n"
-"    gridline-color:   rgb(0, 206, 151);\n"
-"    font-size: 12pt;\n"
-"    color: #000000;\n"
-"}\n"
-"\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color:  rgb(0, 206, 151);\n"
-"    border: 1px solid   rgb(0, 0, 0);\n"
-"    font-size: 12pt;\n"
-"}\n"
-"\n"
-"\n"
-"QTableWidget QTableCornerButton::section {\n"
-"    background-color:  rgb(0, 0, 0);\n"
-"    border: 1px solid  rgb(0, 206, 151);\n"
-"}\n"
-"\n"
-"QSpinBox {\n"
-"    font: 87 12pt \"Arial Black\";\n"
-"    background-color:#000000ff;\n"
-"    color: rgb(0, 206, 151);\n"
-"    border:0px solid #14C8DC;\n"
-"}\n"
-"")
+        self.frame_navbar.setStyleSheet("")
         self.frame_navbar.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_navbar.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_navbar.setObjectName("frame_navbar")
@@ -772,23 +693,141 @@ class Ui_MainWindow(object):
         self.stackedWidgetInterno.addWidget(self.page_azioni)
         self.page_transazioni = QtWidgets.QWidget()
         self.page_transazioni.setObjectName("page_transazioni")
-        self.verticalLayout_16 = QtWidgets.QVBoxLayout(self.page_transazioni)
-        self.verticalLayout_16.setObjectName("verticalLayout_16")
-        self.label_29 = QtWidgets.QLabel(self.page_transazioni)
-        self.label_29.setObjectName("label_29")
-        self.verticalLayout_16.addWidget(self.label_29)
-        spacerItem62 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_16.addItem(spacerItem62)
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.page_transazioni)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
+        self.horizontalLayout_55 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_55.setObjectName("horizontalLayout_55")
+        self.label_202 = QtWidgets.QLabel(self.page_transazioni)
+        self.label_202.setMinimumSize(QtCore.QSize(100, 40))
+        self.label_202.setObjectName("label_202")
+        self.horizontalLayout_55.addWidget(self.label_202)
+        self.transaction_addressInput = QtWidgets.QLineEdit(self.page_transazioni)
+        self.transaction_addressInput.setMinimumSize(QtCore.QSize(100, 40))
+        self.transaction_addressInput.setObjectName("transaction_addressInput")
+        self.horizontalLayout_55.addWidget(self.transaction_addressInput)
+        self.horizontalLayout_8.addLayout(self.horizontalLayout_55)
+        self.horizontalLayout_56 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_56.setObjectName("horizontalLayout_56")
+        self.label_203 = QtWidgets.QLabel(self.page_transazioni)
+        self.label_203.setMinimumSize(QtCore.QSize(100, 40))
+        self.label_203.setObjectName("label_203")
+        self.horizontalLayout_56.addWidget(self.label_203)
+        self.transaction_recipientInput = QtWidgets.QLineEdit(self.page_transazioni)
+        self.transaction_recipientInput.setMinimumSize(QtCore.QSize(100, 40))
+        self.transaction_recipientInput.setObjectName("transaction_recipientInput")
+        self.horizontalLayout_56.addWidget(self.transaction_recipientInput)
+        self.horizontalLayout_8.addLayout(self.horizontalLayout_56)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_8)
+        self.transaction_amountInput = QtWidgets.QLineEdit(self.page_transazioni)
+        self.transaction_amountInput.setMinimumSize(QtCore.QSize(100, 40))
+        self.transaction_amountInput.setObjectName("transaction_amountInput")
+        self.verticalLayout_3.addWidget(self.transaction_amountInput)
+        self.horizontalLayout_27 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_27.setObjectName("horizontalLayout_27")
+        self.transaction_addressLabel = QtWidgets.QLabel(self.page_transazioni)
+        self.transaction_addressLabel.setMinimumSize(QtCore.QSize(100, 40))
+        self.transaction_addressLabel.setObjectName("transaction_addressLabel")
+        self.horizontalLayout_27.addWidget(self.transaction_addressLabel)
+        self.transaction_recipientLabel = QtWidgets.QLabel(self.page_transazioni)
+        self.transaction_recipientLabel.setMinimumSize(QtCore.QSize(100, 40))
+        self.transaction_recipientLabel.setObjectName("transaction_recipientLabel")
+        self.horizontalLayout_27.addWidget(self.transaction_recipientLabel)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_27)
+        self.transferButton = QtWidgets.QPushButton(self.page_transazioni)
+        self.transferButton.setMinimumSize(QtCore.QSize(100, 40))
+        self.transferButton.setObjectName("transferButton")
+        self.verticalLayout_3.addWidget(self.transferButton)
+        self.transferLabel = QtWidgets.QLabel(self.page_transazioni)
+        self.transferLabel.setMinimumSize(QtCore.QSize(100, 40))
+        self.transferLabel.setObjectName("transferLabel")
+        self.verticalLayout_3.addWidget(self.transferLabel)
         self.stackedWidgetInterno.addWidget(self.page_transazioni)
         self.page_statistiche = QtWidgets.QWidget()
         self.page_statistiche.setObjectName("page_statistiche")
-        self.verticalLayout_15 = QtWidgets.QVBoxLayout(self.page_statistiche)
-        self.verticalLayout_15.setObjectName("verticalLayout_15")
-        self.label_28 = QtWidgets.QLabel(self.page_statistiche)
-        self.label_28.setObjectName("label_28")
-        self.verticalLayout_15.addWidget(self.label_28)
-        spacerItem63 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_15.addItem(spacerItem63)
+        self.verticalLayout_14 = QtWidgets.QVBoxLayout(self.page_statistiche)
+        self.verticalLayout_14.setObjectName("verticalLayout_14")
+        self.horizontalLayout_57 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_57.setObjectName("horizontalLayout_57")
+        self.label_204 = QtWidgets.QLabel(self.page_statistiche)
+        self.label_204.setMinimumSize(QtCore.QSize(100, 40))
+        self.label_204.setObjectName("label_204")
+        self.horizontalLayout_57.addWidget(self.label_204)
+        self.input_address = QtWidgets.QLineEdit(self.page_statistiche)
+        self.input_address.setMinimumSize(QtCore.QSize(100, 40))
+        self.input_address.setObjectName("input_address")
+        self.horizontalLayout_57.addWidget(self.input_address)
+        self.verticalLayout_14.addLayout(self.horizontalLayout_57)
+        self.horizontalLayout_59 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_59.setObjectName("horizontalLayout_59")
+        self.label_32 = QtWidgets.QLabel(self.page_statistiche)
+        self.label_32.setObjectName("label_32")
+        self.horizontalLayout_59.addWidget(self.label_32)
+        self.input_tokenuri = QtWidgets.QLineEdit(self.page_statistiche)
+        self.input_tokenuri.setMinimumSize(QtCore.QSize(100, 40))
+        self.input_tokenuri.setObjectName("input_tokenuri")
+        self.horizontalLayout_59.addWidget(self.input_tokenuri)
+        self.verticalLayout_14.addLayout(self.horizontalLayout_59)
+        self.btn_mint = QtWidgets.QPushButton(self.page_statistiche)
+        self.btn_mint.setMinimumSize(QtCore.QSize(100, 40))
+        self.btn_mint.setObjectName("btn_mint")
+        self.verticalLayout_14.addWidget(self.btn_mint)
+        self.horizontalLayout_60 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_60.setObjectName("horizontalLayout_60")
+        self.label_205 = QtWidgets.QLabel(self.page_statistiche)
+        self.label_205.setMinimumSize(QtCore.QSize(100, 40))
+        self.label_205.setObjectName("label_205")
+        self.horizontalLayout_60.addWidget(self.label_205)
+        self.input_from_address = QtWidgets.QLineEdit(self.page_statistiche)
+        self.input_from_address.setMinimumSize(QtCore.QSize(100, 40))
+        self.input_from_address.setObjectName("input_from_address")
+        self.horizontalLayout_60.addWidget(self.input_from_address)
+        self.verticalLayout_14.addLayout(self.horizontalLayout_60)
+        self.horizontalLayout_61 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_61.setObjectName("horizontalLayout_61")
+        self.label_33 = QtWidgets.QLabel(self.page_statistiche)
+        self.label_33.setObjectName("label_33")
+        self.horizontalLayout_61.addWidget(self.label_33)
+        self.input_private_key = QtWidgets.QLineEdit(self.page_statistiche)
+        self.input_private_key.setMinimumSize(QtCore.QSize(100, 40))
+        self.input_private_key.setObjectName("input_private_key")
+        self.horizontalLayout_61.addWidget(self.input_private_key)
+        self.verticalLayout_14.addLayout(self.horizontalLayout_61)
+        self.horizontalLayout_62 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_62.setObjectName("horizontalLayout_62")
+        self.label_34 = QtWidgets.QLabel(self.page_statistiche)
+        self.label_34.setObjectName("label_34")
+        self.horizontalLayout_62.addWidget(self.label_34)
+        self.input_transfer_to = QtWidgets.QLineEdit(self.page_statistiche)
+        self.input_transfer_to.setMinimumSize(QtCore.QSize(100, 40))
+        self.input_transfer_to.setObjectName("input_transfer_to")
+        self.horizontalLayout_62.addWidget(self.input_transfer_to)
+        self.verticalLayout_14.addLayout(self.horizontalLayout_62)
+        self.horizontalLayout_63 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_63.setObjectName("horizontalLayout_63")
+        self.label_35 = QtWidgets.QLabel(self.page_statistiche)
+        self.label_35.setObjectName("label_35")
+        self.horizontalLayout_63.addWidget(self.label_35)
+        self.input_tokenid = QtWidgets.QLineEdit(self.page_statistiche)
+        self.input_tokenid.setMinimumSize(QtCore.QSize(100, 40))
+        self.input_tokenid.setObjectName("input_tokenid")
+        self.horizontalLayout_63.addWidget(self.input_tokenid)
+        self.verticalLayout_14.addLayout(self.horizontalLayout_63)
+        self.btn_transfer = QtWidgets.QPushButton(self.page_statistiche)
+        self.btn_transfer.setMinimumSize(QtCore.QSize(100, 40))
+        self.btn_transfer.setObjectName("btn_transfer")
+        self.verticalLayout_14.addWidget(self.btn_transfer)
+        self.btn_history = QtWidgets.QPushButton(self.page_statistiche)
+        self.btn_history.setMinimumSize(QtCore.QSize(100, 40))
+        self.btn_history.setObjectName("btn_history")
+        self.verticalLayout_14.addWidget(self.btn_history)
+        self.text_output = QtWidgets.QTextEdit(self.page_statistiche)
+        self.text_output.setMinimumSize(QtCore.QSize(0, 100))
+        self.text_output.setMaximumSize(QtCore.QSize(16777215, 100))
+        self.text_output.setReadOnly(True)
+        self.text_output.setObjectName("text_output")
+        self.verticalLayout_14.addWidget(self.text_output)
         self.stackedWidgetInterno.addWidget(self.page_statistiche)
         self.page_profilo = QtWidgets.QWidget()
         self.page_profilo.setObjectName("page_profilo")
@@ -801,8 +840,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_11.addWidget(self.label_profilo_info)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem64 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem64)
+        spacerItem62 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem62)
         self.label_15 = QtWidgets.QLabel(self.page_profilo)
         font = QtGui.QFont()
         font.setFamily("MS Shell Dlg 2")
@@ -818,13 +857,13 @@ class Ui_MainWindow(object):
         self.label_profilo_email.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";color:rgb(255, 255, 255)")
         self.label_profilo_email.setObjectName("label_profilo_email")
         self.horizontalLayout.addWidget(self.label_profilo_email)
-        spacerItem65 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem65)
+        spacerItem63 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem63)
         self.verticalLayout_11.addLayout(self.horizontalLayout)
         self.horizontalLayout_35 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_35.setObjectName("horizontalLayout_35")
-        spacerItem66 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_35.addItem(spacerItem66)
+        spacerItem64 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_35.addItem(spacerItem64)
         self.label_61 = QtWidgets.QLabel(self.page_profilo)
         self.label_61.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_61.setObjectName("label_61")
@@ -833,13 +872,13 @@ class Ui_MainWindow(object):
         self.label_profilo_password.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";color:rgb(255, 255, 255)")
         self.label_profilo_password.setObjectName("label_profilo_password")
         self.horizontalLayout_35.addWidget(self.label_profilo_password)
-        spacerItem67 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_35.addItem(spacerItem67)
+        spacerItem65 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_35.addItem(spacerItem65)
         self.verticalLayout_11.addLayout(self.horizontalLayout_35)
         self.horizontalLayout_36 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_36.setObjectName("horizontalLayout_36")
-        spacerItem68 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_36.addItem(spacerItem68)
+        spacerItem66 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_36.addItem(spacerItem66)
         self.label_67 = QtWidgets.QLabel(self.page_profilo)
         self.label_67.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_67.setObjectName("label_67")
@@ -848,13 +887,13 @@ class Ui_MainWindow(object):
         self.label_profilo_iva.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";color:rgb(255, 255, 255)")
         self.label_profilo_iva.setObjectName("label_profilo_iva")
         self.horizontalLayout_36.addWidget(self.label_profilo_iva)
-        spacerItem69 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_36.addItem(spacerItem69)
+        spacerItem67 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_36.addItem(spacerItem67)
         self.verticalLayout_11.addLayout(self.horizontalLayout_36)
         self.horizontalLayout_37 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_37.setObjectName("horizontalLayout_37")
-        spacerItem70 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_37.addItem(spacerItem70)
+        spacerItem68 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_37.addItem(spacerItem68)
         self.label_69 = QtWidgets.QLabel(self.page_profilo)
         self.label_69.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_69.setObjectName("label_69")
@@ -863,13 +902,13 @@ class Ui_MainWindow(object):
         self.label_profilo_nome.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";color:rgb(255, 255, 255)")
         self.label_profilo_nome.setObjectName("label_profilo_nome")
         self.horizontalLayout_37.addWidget(self.label_profilo_nome)
-        spacerItem71 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_37.addItem(spacerItem71)
+        spacerItem69 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_37.addItem(spacerItem69)
         self.verticalLayout_11.addLayout(self.horizontalLayout_37)
         self.horizontalLayout_51 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_51.setObjectName("horizontalLayout_51")
-        spacerItem72 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_51.addItem(spacerItem72)
+        spacerItem70 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_51.addItem(spacerItem70)
         self.label_63 = QtWidgets.QLabel(self.page_profilo)
         self.label_63.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_63.setObjectName("label_63")
@@ -878,13 +917,13 @@ class Ui_MainWindow(object):
         self.label_profilo_indirizzo.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";color:rgb(255, 255, 255)")
         self.label_profilo_indirizzo.setObjectName("label_profilo_indirizzo")
         self.horizontalLayout_51.addWidget(self.label_profilo_indirizzo)
-        spacerItem73 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_51.addItem(spacerItem73)
+        spacerItem71 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_51.addItem(spacerItem71)
         self.verticalLayout_11.addLayout(self.horizontalLayout_51)
         self.horizontalLayout_86 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_86.setObjectName("horizontalLayout_86")
-        spacerItem74 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_86.addItem(spacerItem74)
+        spacerItem72 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_86.addItem(spacerItem72)
         self.label_65 = QtWidgets.QLabel(self.page_profilo)
         self.label_65.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_65.setObjectName("label_65")
@@ -893,13 +932,13 @@ class Ui_MainWindow(object):
         self.label_profilo_telefono.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";color:rgb(255, 255, 255)")
         self.label_profilo_telefono.setObjectName("label_profilo_telefono")
         self.horizontalLayout_86.addWidget(self.label_profilo_telefono)
-        spacerItem75 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_86.addItem(spacerItem75)
+        spacerItem73 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_86.addItem(spacerItem73)
         self.verticalLayout_11.addLayout(self.horizontalLayout_86)
         self.horizontalLayout_87 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_87.setObjectName("horizontalLayout_87")
-        spacerItem76 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_87.addItem(spacerItem76)
+        spacerItem74 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_87.addItem(spacerItem74)
         self.label_70 = QtWidgets.QLabel(self.page_profilo)
         self.label_70.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_70.setObjectName("label_70")
@@ -908,8 +947,8 @@ class Ui_MainWindow(object):
         self.label_profilo_ragionesociale.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";color:rgb(255, 255, 255)")
         self.label_profilo_ragionesociale.setObjectName("label_profilo_ragionesociale")
         self.horizontalLayout_87.addWidget(self.label_profilo_ragionesociale)
-        spacerItem77 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_87.addItem(spacerItem77)
+        spacerItem75 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_87.addItem(spacerItem75)
         self.verticalLayout_11.addLayout(self.horizontalLayout_87)
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
@@ -921,8 +960,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_11.addLayout(self.horizontalLayout_6)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        spacerItem78 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem78)
+        spacerItem76 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem76)
         self.bt_profilo_modifica = QtWidgets.QPushButton(self.page_profilo)
         self.bt_profilo_modifica.setMinimumSize(QtCore.QSize(120, 40))
         icon6 = QtGui.QIcon()
@@ -931,8 +970,8 @@ class Ui_MainWindow(object):
         self.bt_profilo_modifica.setIconSize(QtCore.QSize(35, 35))
         self.bt_profilo_modifica.setObjectName("bt_profilo_modifica")
         self.horizontalLayout_2.addWidget(self.bt_profilo_modifica)
-        spacerItem79 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem79)
+        spacerItem77 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem77)
         self.verticalLayout_11.addLayout(self.horizontalLayout_2)
         self.stackedWidgetInterno.addWidget(self.page_profilo)
         self.page_modProfilo = QtWidgets.QWidget()
@@ -941,8 +980,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_13.setObjectName("verticalLayout_13")
         self.horizontalLayout_28 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_28.setObjectName("horizontalLayout_28")
-        spacerItem80 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_28.addItem(spacerItem80)
+        spacerItem78 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_28.addItem(spacerItem78)
         self.label_12 = QtWidgets.QLabel(self.page_modProfilo)
         font = QtGui.QFont()
         font.setFamily("MS Shell Dlg 2")
@@ -959,13 +998,13 @@ class Ui_MainWindow(object):
 "font: 12pt \"MS Shell Dlg 2\";")
         self.editText_modProfilo_emailfield.setObjectName("editText_modProfilo_emailfield")
         self.horizontalLayout_28.addWidget(self.editText_modProfilo_emailfield)
-        spacerItem81 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_28.addItem(spacerItem81)
+        spacerItem79 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_28.addItem(spacerItem79)
         self.verticalLayout_13.addLayout(self.horizontalLayout_28)
         self.horizontalLayout_42 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_42.setObjectName("horizontalLayout_42")
-        spacerItem82 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_42.addItem(spacerItem82)
+        spacerItem80 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_42.addItem(spacerItem80)
         self.label_58 = QtWidgets.QLabel(self.page_modProfilo)
         self.label_58.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_58.setObjectName("label_58")
@@ -975,13 +1014,13 @@ class Ui_MainWindow(object):
 "font: 12pt \"MS Shell Dlg 2\";")
         self.editText_modProfilo_indirizzofield.setObjectName("editText_modProfilo_indirizzofield")
         self.horizontalLayout_42.addWidget(self.editText_modProfilo_indirizzofield)
-        spacerItem83 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_42.addItem(spacerItem83)
+        spacerItem81 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_42.addItem(spacerItem81)
         self.verticalLayout_13.addLayout(self.horizontalLayout_42)
         self.horizontalLayout_50 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_50.setObjectName("horizontalLayout_50")
-        spacerItem84 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_50.addItem(spacerItem84)
+        spacerItem82 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_50.addItem(spacerItem82)
         self.label_59 = QtWidgets.QLabel(self.page_modProfilo)
         self.label_59.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_59.setObjectName("label_59")
@@ -991,13 +1030,13 @@ class Ui_MainWindow(object):
 "font: 12pt \"MS Shell Dlg 2\";")
         self.editText_modProfilo_telefonofield.setObjectName("editText_modProfilo_telefonofield")
         self.horizontalLayout_50.addWidget(self.editText_modProfilo_telefonofield)
-        spacerItem85 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_50.addItem(spacerItem85)
+        spacerItem83 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_50.addItem(spacerItem83)
         self.verticalLayout_13.addLayout(self.horizontalLayout_50)
         self.horizontalLayout_33 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_33.setObjectName("horizontalLayout_33")
-        spacerItem86 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_33.addItem(spacerItem86)
+        spacerItem84 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_33.addItem(spacerItem84)
         self.label_13 = QtWidgets.QLabel(self.page_modProfilo)
         self.label_13.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_13.setObjectName("label_13")
@@ -1008,13 +1047,13 @@ class Ui_MainWindow(object):
         self.editText_modProfilo_vecchiaPasswordfield.setEchoMode(QtWidgets.QLineEdit.Password)
         self.editText_modProfilo_vecchiaPasswordfield.setObjectName("editText_modProfilo_vecchiaPasswordfield")
         self.horizontalLayout_33.addWidget(self.editText_modProfilo_vecchiaPasswordfield)
-        spacerItem87 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_33.addItem(spacerItem87)
+        spacerItem85 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_33.addItem(spacerItem85)
         self.verticalLayout_13.addLayout(self.horizontalLayout_33)
         self.horizontalLayout_88 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_88.setObjectName("horizontalLayout_88")
-        spacerItem88 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_88.addItem(spacerItem88)
+        spacerItem86 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_88.addItem(spacerItem86)
         self.label_73 = QtWidgets.QLabel(self.page_modProfilo)
         self.label_73.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_73.setObjectName("label_73")
@@ -1025,13 +1064,13 @@ class Ui_MainWindow(object):
         self.editText_modProfilo_nuovaPasswordfield.setEchoMode(QtWidgets.QLineEdit.Password)
         self.editText_modProfilo_nuovaPasswordfield.setObjectName("editText_modProfilo_nuovaPasswordfield")
         self.horizontalLayout_88.addWidget(self.editText_modProfilo_nuovaPasswordfield)
-        spacerItem89 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_88.addItem(spacerItem89)
+        spacerItem87 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_88.addItem(spacerItem87)
         self.verticalLayout_13.addLayout(self.horizontalLayout_88)
         self.horizontalLayout_89 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_89.setObjectName("horizontalLayout_89")
-        spacerItem90 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_89.addItem(spacerItem90)
+        spacerItem88 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_89.addItem(spacerItem88)
         self.label_74 = QtWidgets.QLabel(self.page_modProfilo)
         self.label_74.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
         self.label_74.setObjectName("label_74")
@@ -1042,8 +1081,8 @@ class Ui_MainWindow(object):
         self.editText_modProfilo_confermaNuovaPasswordfield.setEchoMode(QtWidgets.QLineEdit.Password)
         self.editText_modProfilo_confermaNuovaPasswordfield.setObjectName("editText_modProfilo_confermaNuovaPasswordfield")
         self.horizontalLayout_89.addWidget(self.editText_modProfilo_confermaNuovaPasswordfield)
-        spacerItem91 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_89.addItem(spacerItem91)
+        spacerItem89 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_89.addItem(spacerItem89)
         self.verticalLayout_13.addLayout(self.horizontalLayout_89)
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
@@ -1055,8 +1094,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_13.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        spacerItem92 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem92)
+        spacerItem90 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem90)
         self.bt_modProfilo_salva = QtWidgets.QPushButton(self.page_modProfilo)
         self.bt_modProfilo_salva.setMinimumSize(QtCore.QSize(100, 40))
         icon7 = QtGui.QIcon()
@@ -1065,8 +1104,8 @@ class Ui_MainWindow(object):
         self.bt_modProfilo_salva.setIconSize(QtCore.QSize(35, 35))
         self.bt_modProfilo_salva.setObjectName("bt_modProfilo_salva")
         self.horizontalLayout_3.addWidget(self.bt_modProfilo_salva)
-        spacerItem93 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem93)
+        spacerItem91 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem91)
         self.verticalLayout_13.addLayout(self.horizontalLayout_3)
         self.stackedWidgetInterno.addWidget(self.page_modProfilo)
         self.verticalLayout_7.addWidget(self.stackedWidgetInterno)
@@ -1076,12 +1115,12 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stackedWidgetEsterno.setCurrentIndex(3)
-        self.stackedWidgetInterno.setCurrentIndex(1)
+        self.stackedWidgetInterno.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Smart Supply Chain"))
         self.label.setText(_translate("MainWindow", "Welcome"))
         self.label_2.setText(_translate("MainWindow", "Sign in or create a new account"))
         self.bt_welcome_accedi.setText(_translate("MainWindow", "Login"))
@@ -1132,8 +1171,21 @@ class Ui_MainWindow(object):
         self.burningLabel.setText(_translate("MainWindow", "burning status"))
         self.checkBalanceButton.setText(_translate("MainWindow", "Button Balance"))
         self.balanceLabel.setText(_translate("MainWindow", "balance"))
-        self.label_29.setText(_translate("MainWindow", "TextLabel"))
-        self.label_28.setText(_translate("MainWindow", "TextLabel"))
+        self.label_202.setText(_translate("MainWindow", "Immetti il tuo address: "))
+        self.label_203.setText(_translate("MainWindow", "Immetti il suo address: "))
+        self.transaction_addressLabel.setText(_translate("MainWindow", "balance tuo"))
+        self.transaction_recipientLabel.setText(_translate("MainWindow", "balance recipiente"))
+        self.transferButton.setText(_translate("MainWindow", "Button Transfer"))
+        self.transferLabel.setText(_translate("MainWindow", "burning status"))
+        self.label_204.setText(_translate("MainWindow", "Immetti il tuo address: "))
+        self.label_32.setText(_translate("MainWindow", "Immetti il Token URI: "))
+        self.btn_mint.setText(_translate("MainWindow", "Mint NFT"))
+        self.label_205.setText(_translate("MainWindow", "Immetti il tuo address: "))
+        self.label_33.setText(_translate("MainWindow", "Immetti la tua chiava privata: "))
+        self.label_34.setText(_translate("MainWindow", "Immetti l\'address del destinatario: "))
+        self.label_35.setText(_translate("MainWindow", "Immetti il Token ID: "))
+        self.btn_transfer.setText(_translate("MainWindow", "Trasferisci NFT"))
+        self.btn_history.setText(_translate("MainWindow", "Mostra Storico"))
         self.label_profilo_info.setText(_translate("MainWindow", "Dati personali:"))
         self.label_15.setText(_translate("MainWindow", "e-mail"))
         self.label_profilo_email.setText(_translate("MainWindow", "TextLabel"))

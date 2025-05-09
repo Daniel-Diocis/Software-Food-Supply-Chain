@@ -1,4 +1,5 @@
 import sys
+import json
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import bcrypt
@@ -7,7 +8,7 @@ from PyQt5.QtCore import  QPropertyAnimation,QEasingCurve
 from PyQt5 import QtCore, QtWidgets
 from interfacciaUtente import Ui_MainWindow
 from connessione_sqlite import Comunicazione
-from onChain import MyTokenContract, BlockchainConnector
+from onChain import MyTokenContract, BlockchainConnector, SupplyChainNFT
 from connessione2_sqlite import DatabaseConnector
 import re  # Per validazione dell'indirizzo
 
@@ -34,11 +35,30 @@ class FinestraPrincipale(QMainWindow):
             self.ui.mintingLabel.setText("Connessione al contratto riuscita!")
         except Exception as e:
             self.ui.mintingLabel.setText(f"Errore nella connessione: {str(e)}")
+            
+        # Inizializzazione del contratto NFT SupplyChain
+        try:
+            with open(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'onChain', 'build', 'contracts', 'SupplyChainNFT.json'))) as f:
+                abi = json.load(f)["abi"]
+
+            self.nft_contract = SupplyChainNFT(
+                "http://127.0.0.1:7545",
+                "0xdFe96997D15b4478bcC3ABdbc3B6806fc93aC98f",  # indirizzo contratto NFT
+                abi
+            )
+            self.ui.mintingLabel.setText(self.ui.mintingLabel.text() + " | Contratto NFT ok ✅")
+        except Exception as e:
+            self.ui.mintingLabel.setText(self.ui.mintingLabel.text() + f" | NFT errore: {str(e)}")
 
         # Connessione dei bottoni alle funzioni
         self.ui.mintButton.clicked.connect(self.mint_tokens)
         self.ui.burnButton.clicked.connect(self.burn_tokens)
+        self.ui.transferButton.clicked.connect(self.transfer_tokens)
         self.ui.checkBalanceButton.clicked.connect(self.check_balance)
+        
+        self.ui.btn_mint.clicked.connect(self.mint_nft)
+        self.ui.btn_transfer.clicked.connect(self.transfer_nft)
+        self.ui.btn_history.clicked.connect(self.show_history)
         
         self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_welcome)
         
@@ -58,6 +78,8 @@ class FinestraPrincipale(QMainWindow):
         self.ui.bt_profilo.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_profilo))
         self.ui.bt_profilo_modifica.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_modProfilo))
         self.ui.bt_azioni.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_azioni))
+        self.ui.bt_transazioni.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_transazioni))
+        self.ui.bt_statistiche.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_statistiche))
         
     def registra_utente(self):
         email = self.ui.register_emailfield.text().strip()
@@ -304,6 +326,36 @@ class FinestraPrincipale(QMainWindow):
             print(f"Bruciati {amount} token per {address}")
         except Exception as e:
             self.ui.burningLabel.setText(f"Errore durante il burn: {str(e)}")
+            
+    def transfer_tokens(self):
+        utente = self.database.get_utente_per_id()
+        id_from = str(utente['id']).strip()
+        id_to = self.ui.transaction_recipientInput.text().strip()
+        amount_str = self.ui.transaction_amountInput.text().strip()
+
+        address_from = self.database.get_address(id_from)
+        address_to = self.database.get_address(id_to)
+
+        if not self.is_valid_address(address_from) or not self.is_valid_address(address_to):
+            self.ui.transferLabel.setText("Errore: Uno degli indirizzi Ethereum non è valido.")
+            return
+
+        if not amount_str.isdigit():
+            self.ui.transferLabel.setText("Errore: L'importo deve essere un numero valido.")
+            return
+
+        try:
+            amount = int(amount_str)
+
+            if amount <= 0:
+                self.ui.transferLabel.setText("Errore: L'importo deve essere maggiore di zero.")
+                return
+
+            tx_hash = self.contract.transfer_tokens(address_to, amount)
+            self.check_balance()  # Aggiorna il saldo dopo il trasferimento
+            self.ui.transferLabel.setText(f"✅ Token inviati! TX hash: {tx_hash}")
+        except Exception as e:
+            self.ui.transferLabel.setText(f"Errore nel trasferimento: {str(e)}")
 
     def check_balance(self):
         utente = self.database.get_utente_per_id()
@@ -319,6 +371,7 @@ class FinestraPrincipale(QMainWindow):
             balance = self.contract.get_balance(address)
             self.ui.balanceLabel.setText(f"Saldo: {balance / 10**18}")
             self.ui.label_home_token.setText(f"Saldo: {balance / 10**18}")
+            self.ui.transaction_addressLabel.setText(f"Saldo: {balance / 10**18}")
             print(f"Saldo dell'indirizzo {address}: {balance / 10**18} MTK")
         except Exception as e:
             self.ui.balanceLabel.setText(f"Errore: {str(e)}")
@@ -326,6 +379,28 @@ class FinestraPrincipale(QMainWindow):
     def is_valid_address(self, address):
         """Verifica che l'indirizzo sia valido (inizia con 0x e ha una lunghezza di 42 caratteri)."""
         return bool(re.match(r"^0x[a-fA-F0-9]{40}$", address))
+    
+    def mint_nft(self):
+        address = self.ui.input_address.text().strip()
+        token_uri = self.ui.input_tokenuri.text().strip()
+        if address and token_uri:
+            tx_hash, token_id = self.nft_contract.mint_product_nft(address, token_uri)
+            self.ui.text_output.append(f"Mintato! TX: {tx_hash}\nToken ID: {token_id}")
+            
+    def transfer_nft(self):
+        from_address = self.ui.input_from_address.text().strip()
+        private_key = self.ui.input_private_key.text().strip()
+        to_address = self.ui.input_transfer_to.text().strip()
+        token_id = int(self.ui.input_tokenid.text().strip())
+
+        if from_address and private_key and to_address and token_id >= 0:
+            tx_hash = self.nft_contract.transfer_product_nft(from_address, to_address, token_id, private_key)
+            self.ui.text_output.append(f"Trasferito! TX: {tx_hash}")
+
+    def show_history(self):
+        token_id = int(self.ui.input_tokenid.text().strip())
+        history = self.nft_contract.get_ownership_history(token_id)
+        self.ui.text_output.append(f"Storico: {history}")
         
         
 if __name__ == "__main__":
