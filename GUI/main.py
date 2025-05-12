@@ -11,7 +11,7 @@ from connessione_sqlite import Comunicazione
 from onChain import MyTokenContract, BlockchainConnector, SupplyChainNFT
 from connessione2_sqlite import DatabaseConnector
 import re  # Per validazione dell'indirizzo
-
+import assets
 class FinestraPrincipale(QMainWindow):
     def __init__(self):
         super(FinestraPrincipale, self).__init__()
@@ -59,6 +59,7 @@ class FinestraPrincipale(QMainWindow):
         self.ui.btn_mint.clicked.connect(self.mint_nft)
         self.ui.btn_transfer.clicked.connect(self.transfer_nft)
         self.ui.btn_history.clicked.connect(self.show_history)
+        self.ui.mintNFT_mintNFTbutton.clicked.connect(self.crea_json_nft)
         
         self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_welcome)
         
@@ -79,8 +80,87 @@ class FinestraPrincipale(QMainWindow):
         self.ui.bt_profilo_modifica.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_modProfilo))
         self.ui.bt_azioni.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_azioni))
         self.ui.bt_transazioni.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_transazioni))
-        self.ui.bt_statistiche.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_statistiche))
-        
+        self.ui.bt_statistiche.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_NFT))
+        self.ui.pushButton.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_mintNFT))
+    
+    def popola_combobox_immagini(self):
+        import os
+
+        print(">>> Inizio popolamento comboBox immagini")
+
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        print(f"Percorso base calcolato: {base_dir}")
+
+        assets_dir = os.path.join(base_dir, "assets")
+        print(f"Percorso completo assets: {assets_dir}")
+
+        if not os.path.exists(assets_dir):
+            print(f"⚠️  Cartella assets NON trovata in: {assets_dir}")
+            return
+
+        print(f"✅ Cartella assets trovata")
+
+        estensioni_immagini = ('.png', '.jpg', '.jpeg', '.gif')
+        immagini = []
+
+        for f in os.listdir(assets_dir):
+            print(f"Esaminando file: {f}")
+            if f.lower().endswith(estensioni_immagini):
+                immagini.append(f)
+                print(f"➕ Aggiunto: {f}")
+            else:
+                print(f"❌ Ignorato (non immagine): {f}")
+
+        if not immagini:
+            print("⚠️  Nessuna immagine valida trovata nella cartella assets.")
+        else:
+            print(f"🎉 Immagini trovate: {immagini}")
+
+        self.ui.mintNFT_imagecomboBox.clear()
+        self.ui.mintNFT_imagecomboBox.addItems(immagini)
+        print(f"✅ Caricate {len(immagini)} immagini nella comboBox.")
+        print(">>> Fine popolamento comboBox immagini")
+    
+    def popola_nft_widget(self):
+        import os
+        import json
+        from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
+
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        address = self.database.get_address(id)
+
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        metadata_dir = os.path.join(base_dir, "nft_metadata")
+
+        if not os.path.exists(metadata_dir):
+            print("❌ Cartella nft_metadata non trovata.")
+            return
+
+        layout = QVBoxLayout()
+        count = 0
+
+        for filename in os.listdir(metadata_dir):
+            if filename.endswith('.json'):
+                path = os.path.join(metadata_dir, filename)
+                with open(path, 'r') as f:
+                    try:
+                        data = json.load(f)
+                        if data.get("owner", "").lower() == address.lower():
+                            label = QLabel(f"🆔 {data.get('name')}\n📍 {data.get('origin')}\n📦 {data.get('quantity')}")
+                            label.setStyleSheet("color: white; padding: 10px; border: 1px solid gray;")
+                            layout.addWidget(label)
+                            count += 1
+                    except json.JSONDecodeError:
+                        print(f"⚠️ Errore di parsing in: {filename}")
+
+        if count == 0:
+            layout.addWidget(QLabel("Nessun NFT trovato per questo utente."))
+
+        container = QWidget()
+        container.setLayout(layout)
+        self.ui.scrollArea.setWidget(container)
+    
     def registra_utente(self):
         email = self.ui.register_emailfield.text().strip()
         password = self.ui.register_passwordfield.text().strip()
@@ -139,6 +219,7 @@ class FinestraPrincipale(QMainWindow):
                 self.ui.label_profilo_password.setText("●●●●●●")  # Non mostriamo la password
                 self.ui.label_profilo_iva.setText(utente['iva'])
                 self.ui.label_profilo_nome.setText(utente['nome'])
+                self.ui.label_profilo_tipologia.setText(utente['tipologia'])
                 self.ui.label_profilo_indirizzo.setText(utente['indirizzo'])
                 self.ui.label_profilo_telefono.setText(utente['telefono'])
                 self.ui.label_profilo_ragionesociale.setText(utente['ragione_sociale'])
@@ -187,6 +268,7 @@ class FinestraPrincipale(QMainWindow):
                     self.ui.label_profilo_password.setText("●●●●●●")  # Non mostriamo la password
                     self.ui.label_profilo_iva.setText(utente['iva'])
                     self.ui.label_profilo_nome.setText(utente['nome'])
+                    self.ui.label_profilo_tipologia.setText(utente['tipologia'])
                     self.ui.label_profilo_indirizzo.setText(utente['indirizzo'])
                     self.ui.label_profilo_telefono.setText(utente['telefono'])
                     self.ui.label_profilo_ragionesociale.setText(utente['ragione_sociale'])
@@ -201,6 +283,9 @@ class FinestraPrincipale(QMainWindow):
                     self.ui.login_emailfield.setText("")
                     self.ui.login_passwordfield.setText("")
                     self.ui.login_signalError.setText("")  # Pulisce il messaggio di errore
+                    
+                    self.popola_combobox_immagini()  # Popola la comboBox delle immagini
+                    self.popola_nft_widget()  # Popola la pagina NFT con gli NFT dell'utente
                 else:
                     self.ui.login_signalError.setText("Errore: Impossibile recuperare i dati dell'utente.")
             else:
@@ -380,12 +465,15 @@ class FinestraPrincipale(QMainWindow):
         """Verifica che l'indirizzo sia valido (inizia con 0x e ha una lunghezza di 42 caratteri)."""
         return bool(re.match(r"^0x[a-fA-F0-9]{40}$", address))
     
-    def mint_nft(self):
-        address = self.ui.input_address.text().strip()
-        token_uri = self.ui.input_tokenuri.text().strip()
+    def mint_nft(self, path_file):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        address = self.database.get_address(id)
+        token_uri = path_file
         if address and token_uri:
             tx_hash, token_id = self.nft_contract.mint_product_nft(address, token_uri)
             self.ui.text_output.append(f"Mintato! TX: {tx_hash}\nToken ID: {token_id}")
+            print(f"Mintato NFT con ID {token_id} per l'indirizzo {address}. TX: {tx_hash}")
             
     def transfer_nft(self):
         from_address = self.ui.input_from_address.text().strip()
@@ -401,6 +489,54 @@ class FinestraPrincipale(QMainWindow):
         token_id = int(self.ui.input_tokenid.text().strip())
         history = self.nft_contract.get_ownership_history(token_id)
         self.ui.text_output.append(f"Storico: {history}")
+
+    def crea_json_nft(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        address = self.database.get_address(id)
+        
+        nome = self.ui.mintNFT_namefield.text().strip()
+        descrizione = self.ui.mintNFT_descriptionfield.toPlainText().strip()
+        immagine = self.ui.mintNFT_imagecomboBox.currentText().strip()
+        origine = self.ui.mintNFT_originfield.text().strip()
+        produttore = self.ui.mintNFT_producerfield.text().strip()
+        certificazione = self.ui.mintNFT_certificationfield.text().strip()
+        sostenibilita = self.ui.mintNFT_sustainabilityspinBox.value()
+        quantita = self.ui.mintNFT_quantityfield.text().strip()
+        data_raccolta = self.ui.mintNFT_harvestdate.date().toString("yyyy-MM-dd")
+        data_scadenza = self.ui.mintNFT_expirydate.date().toString("yyyy-MM-dd")
+
+        if not nome or not immagine:
+            print("Nome o immagine mancanti, impossibile creare JSON.")
+            return
+
+        json_data = {
+            "name": nome,
+            "description": descrizione,
+            "image": f"assets/{immagine}",
+            "origin": origine,
+            "producer": produttore,
+            "certification": certificazione,
+            "sustainability_score": sostenibilita,
+            "quantity": quantita,
+            "harvest_date": data_raccolta,
+            "expiry_date": data_scadenza,
+            "owner": address
+        }
+
+        # Percorso cartella nft_metadata
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        metadata_dir = os.path.join(base_dir, "nft_metadata")
+        os.makedirs(metadata_dir, exist_ok=True)
+
+        nome_file = f"{nome.replace(' ', '_')}_{data_raccolta}.json"
+        path_file = os.path.join(metadata_dir, nome_file)
+
+        with open(path_file, 'w') as f:
+            json.dump(json_data, f, indent=2)
+
+        print(f"JSON NFT creato in: {path_file}")
+        self.mint_nft(path_file)
         
         
 if __name__ == "__main__":
