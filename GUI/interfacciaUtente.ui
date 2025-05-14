@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>926</width>
+    <width>892</width>
     <height>736</height>
    </rect>
   </property>
@@ -1568,7 +1568,7 @@ color:rgb(255, 255, 255)</string>
         <item>
          <widget class="QStackedWidget" name="stackedWidgetInterno">
           <property name="currentIndex">
-           <number>3</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="page_home">
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -1805,27 +1805,6 @@ color:rgb(255, 255, 255)</string>
           <widget class="QWidget" name="page_azioni">
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_34">
-              <item>
-               <widget class="QLabel" name="label_27">
-                <property name="text">
-                 <string>Immetti il tuo address: </string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="addressInput">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_54">
               <item>
                <widget class="QLabel" name="label_31">
@@ -1862,7 +1841,7 @@ color:rgb(255, 255, 255)</string>
             <item>
              <widget class="QLabel" name="mintingLabel">
               <property name="text">
-               <string>minting status</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1882,27 +1861,14 @@ color:rgb(255, 255, 255)</string>
             <item>
              <widget class="QLabel" name="burningLabel">
               <property name="text">
-               <string>burning status</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="checkBalanceButton">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Button Balance</string>
+               <string/>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="balanceLabel">
               <property name="text">
-               <string>balance</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1912,33 +1878,6 @@ color:rgb(255, 255, 255)</string>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_8">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_55">
-                <item>
-                 <widget class="QLabel" name="label_202">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Immetti il tuo address: </string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="transaction_addressInput">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_56">
                 <item>
@@ -1950,7 +1889,7 @@ color:rgb(255, 255, 255)</string>
                    </size>
                   </property>
                   <property name="text">
-                   <string>Immetti il suo address: </string>
+                   <string>Immetti l'id del destinatario: </string>
                   </property>
                  </widget>
                 </item>
@@ -1969,40 +1908,21 @@ color:rgb(255, 255, 255)</string>
              </layout>
             </item>
             <item>
-             <widget class="QLineEdit" name="transaction_amountInput">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>40</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_27">
+             <layout class="QHBoxLayout" name="horizontalLayout_55">
               <item>
-               <widget class="QLabel" name="transaction_addressLabel">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>40</height>
-                 </size>
-                </property>
+               <widget class="QLabel" name="label_29">
                 <property name="text">
-                 <string>balance tuo</string>
+                 <string>Immetti la quantità da trasferire: </string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="transaction_recipientLabel">
+               <widget class="QLineEdit" name="transaction_amountInput">
                 <property name="minimumSize">
                  <size>
                   <width>100</width>
                   <height>40</height>
                  </size>
-                </property>
-                <property name="text">
-                 <string>balance recipiente</string>
                 </property>
                </widget>
               </item>
@@ -2030,7 +1950,20 @@ color:rgb(255, 255, 255)</string>
                </size>
               </property>
               <property name="text">
-               <string>burning status</string>
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="transaction_addressLabel">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
               </property>
              </widget>
             </item>
@@ -2055,7 +1988,7 @@ color:rgb(255, 255, 255)</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>852</width>
+                 <width>818</width>
                  <height>533</height>
                 </rect>
                </property>

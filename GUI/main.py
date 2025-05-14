@@ -3,8 +3,9 @@ import json
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import bcrypt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QHeaderView
-from PyQt5.QtCore import  QPropertyAnimation,QEasingCurve
+from PyQt5.QtWidgets import QApplication, QMainWindow, QHeaderView, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import  QPropertyAnimation,QEasingCurve, Qt
 from PyQt5 import QtCore, QtWidgets
 from interfacciaUtente import Ui_MainWindow
 from connessione_sqlite import Comunicazione
@@ -32,9 +33,9 @@ class FinestraPrincipale(QMainWindow):
             )
 
             self.contract = MyTokenContract(self.connector)
-            self.ui.mintingLabel.setText("Connessione al contratto riuscita!")
+            print(f"Connessione al contratto riuscita!")
         except Exception as e:
-            self.ui.mintingLabel.setText(f"Errore nella connessione: {str(e)}")
+            print(f"Errore nella connessione: {str(e)}")
             
         # Inizializzazione del contratto NFT SupplyChain
         try:
@@ -46,15 +47,14 @@ class FinestraPrincipale(QMainWindow):
                 "0xdFe96997D15b4478bcC3ABdbc3B6806fc93aC98f",  # indirizzo contratto NFT
                 abi
             )
-            self.ui.mintingLabel.setText(self.ui.mintingLabel.text() + " | Contratto NFT ok ✅")
+            print(f" | Contratto NFT ok")
         except Exception as e:
-            self.ui.mintingLabel.setText(self.ui.mintingLabel.text() + f" | NFT errore: {str(e)}")
+            print(f" | NFT errore: {str(e)}")
 
         # Connessione dei bottoni alle funzioni
         self.ui.mintButton.clicked.connect(self.mint_tokens)
         self.ui.burnButton.clicked.connect(self.burn_tokens)
         self.ui.transferButton.clicked.connect(self.transfer_tokens)
-        self.ui.checkBalanceButton.clicked.connect(self.check_balance)
         
         self.ui.btn_mint.clicked.connect(self.mint_nft)
         self.ui.btn_transfer.clicked.connect(self.transfer_nft)
@@ -84,8 +84,6 @@ class FinestraPrincipale(QMainWindow):
         self.ui.pushButton.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_mintNFT))
     
     def popola_combobox_immagini(self):
-        import os
-
         print(">>> Inizio popolamento comboBox immagini")
 
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -122,10 +120,6 @@ class FinestraPrincipale(QMainWindow):
         print(">>> Fine popolamento comboBox immagini")
     
     def popola_nft_widget(self):
-        import os
-        import json
-        from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
-
         utente = self.database.get_utente_per_id()
         id = str(utente['id']).strip()
         address = self.database.get_address(id)
@@ -140,6 +134,7 @@ class FinestraPrincipale(QMainWindow):
         layout = QVBoxLayout()
         count = 0
 
+
         for filename in os.listdir(metadata_dir):
             if filename.endswith('.json'):
                 path = os.path.join(metadata_dir, filename)
@@ -147,9 +142,37 @@ class FinestraPrincipale(QMainWindow):
                     try:
                         data = json.load(f)
                         if data.get("owner", "").lower() == address.lower():
-                            label = QLabel(f"🆔 {data.get('name')}\n📍 {data.get('origin')}\n📦 {data.get('quantity')}")
-                            label.setStyleSheet("color: white; padding: 10px; border: 1px solid gray;")
-                            layout.addWidget(label)
+                            # === Crea layout orizzontale per ogni NFT ===
+                            hbox = QHBoxLayout()
+
+                            # Carica immagine NFT
+                            img_path = os.path.join(base_dir, data.get('image'))
+                            pixmap = QPixmap(img_path)
+                            img_label = QLabel()
+                            img_label.setPixmap(pixmap.scaledToWidth(100))  # ridimensiona immagine
+                            hbox.addWidget(img_label)
+
+                            # Info testuali
+                            text_label = QLabel(
+                                f"<b>{data.get('name')}</b>\n"
+                                f"📍 Origine: {data.get('origin')}\n"
+                                f"📦 Quantità: {data.get('quantity')}"
+                            )
+                            text_label.setStyleSheet("color: white; padding-left: 10px;")
+                            hbox.addWidget(text_label)
+                            
+                            # Bottone per trasferimento NFT
+                            transfer_button = QPushButton("Trasferisci")
+                            transfer_button.setStyleSheet("background-color: #4CAF50; color: white; padding: 5px;")
+                            transfer_button.clicked.connect(lambda _, token_id=data.get('token_id'): self.transfer_nft(token_id))
+                            hbox.addWidget(transfer_button)
+
+                            # Container per la riga
+                            row = QWidget()
+                            row.setLayout(hbox)
+                            row.setStyleSheet("border: 1px solid gray; padding: 5px;")
+                            layout.addWidget(row)
+
                             count += 1
                     except json.JSONDecodeError:
                         print(f"⚠️ Errore di parsing in: {filename}")
@@ -454,9 +477,9 @@ class FinestraPrincipale(QMainWindow):
 
         try:
             balance = self.contract.get_balance(address)
-            self.ui.balanceLabel.setText(f"Saldo: {balance / 10**18}")
-            self.ui.label_home_token.setText(f"Saldo: {balance / 10**18}")
-            self.ui.transaction_addressLabel.setText(f"Saldo: {balance / 10**18}")
+            self.ui.balanceLabel.setText(f"Saldo Token: {balance / 10**18}")
+            self.ui.label_home_token.setText(f"{balance / 10**18}")
+            self.ui.transaction_addressLabel.setText(f"Saldo Token: {balance / 10**18}")
             print(f"Saldo dell'indirizzo {address}: {balance / 10**18} MTK")
         except Exception as e:
             self.ui.balanceLabel.setText(f"Errore: {str(e)}")
