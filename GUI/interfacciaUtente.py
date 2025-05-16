@@ -708,6 +708,16 @@ class Ui_MainWindow(object):
         self.transaction_amountInput.setObjectName("transaction_amountInput")
         self.horizontalLayout_55.addWidget(self.transaction_amountInput)
         self.verticalLayout_3.addLayout(self.horizontalLayout_55)
+        self.horizontalLayout_27 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_27.setObjectName("horizontalLayout_27")
+        self.label_27 = QtWidgets.QLabel(self.page_transazioni)
+        self.label_27.setObjectName("label_27")
+        self.horizontalLayout_27.addWidget(self.label_27)
+        self.transaction_privateKeyInput = QtWidgets.QLineEdit(self.page_transazioni)
+        self.transaction_privateKeyInput.setMinimumSize(QtCore.QSize(100, 40))
+        self.transaction_privateKeyInput.setObjectName("transaction_privateKeyInput")
+        self.horizontalLayout_27.addWidget(self.transaction_privateKeyInput)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_27)
         self.transferButton = QtWidgets.QPushButton(self.page_transazioni)
         self.transferButton.setMinimumSize(QtCore.QSize(100, 40))
         self.transferButton.setObjectName("transferButton")
@@ -1302,7 +1312,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stackedWidgetEsterno.setCurrentIndex(3)
-        self.stackedWidgetInterno.setCurrentIndex(1)
+        self.stackedWidgetInterno.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -1355,6 +1365,7 @@ class Ui_MainWindow(object):
         self.burnButton.setText(_translate("MainWindow", "Button Burn"))
         self.label_203.setText(_translate("MainWindow", "Immetti l\'id del destinatario: "))
         self.label_29.setText(_translate("MainWindow", "Immetti la quantità da trasferire: "))
+        self.label_27.setText(_translate("MainWindow", "Immetti la tua private key: "))
         self.transferButton.setText(_translate("MainWindow", "Button Transfer"))
         self.pushButton.setText(_translate("MainWindow", "Mint NFT"))
         self.label_14.setText(_translate("MainWindow", "TextLabel"))

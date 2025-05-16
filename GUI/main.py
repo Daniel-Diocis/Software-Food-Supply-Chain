@@ -389,6 +389,7 @@ class FinestraPrincipale(QMainWindow):
             tx_hash = self.contract.mint_tokens(address, amount)
             self.ui.mintingLabel.setText(f"Transazione inviata: {tx_hash}")
             self.ui.burningLabel.setText(f"")
+            print(f"Mintati {amount} token per {address}")
             self.check_balance()
 
         except ValueError:
@@ -423,7 +424,6 @@ class FinestraPrincipale(QMainWindow):
             self.ui.burningLabel.setText(f"🔥 Token bruciati! TX hash: {tx_hash}")
             self.ui.mintingLabel.setText("")
             self.check_balance()
-            print(f"Bruciati {amount} token per {address}")
 
         except ValueError:
             self.ui.burningLabel.setText("Errore: L'importo deve essere un numero valido.")
@@ -436,29 +436,28 @@ class FinestraPrincipale(QMainWindow):
         id_from = str(utente['id']).strip()
         id_to = self.ui.transaction_recipientInput.text().strip()
         amount_str = self.ui.transaction_amountInput.text().strip()
+        private_key = self.ui.transaction_privateKeyInput.text().strip()  # devi averlo nell'interfaccia
 
         address_from = self.database.get_address(id_from)
         address_to = self.database.get_address(id_to)
+
+        if not address_from or not address_to:
+            self.ui.transferLabel.setText("Errore: ID utente non valido o mancante.")
+            return
 
         if not self.is_valid_address(address_from) or not self.is_valid_address(address_to):
             self.ui.transferLabel.setText("Errore: Uno degli indirizzi Ethereum non è valido.")
             return
 
         try:
-            # Converte virgole in punti e arrotonda a due cifre
-            amount = round(float(amount_str.replace(',', '.')), 2)
-
+            amount = round(float(amount_str.replace(",", ".")), 2)
             if amount <= 0:
                 self.ui.transferLabel.setText("Errore: L'importo deve essere maggiore di zero.")
                 return
 
-            tx_hash = self.contract.transfer_tokens(address_to, amount)
+            tx_hash = self.contract.transfer_tokens(address_from, private_key, address_to, amount)
             self.check_balance()
             self.ui.transferLabel.setText(f"✅ Token inviati! TX hash: {tx_hash}")
-
-        except ValueError:
-            self.ui.transferLabel.setText("Errore: L'importo deve essere un numero valido.")
-            print(f"Errore durante la conversione dell'importo: '{amount_str}'")
         except Exception as e:
             self.ui.transferLabel.setText(f"Errore nel trasferimento: {str(e)}")
 
@@ -477,7 +476,6 @@ class FinestraPrincipale(QMainWindow):
             self.ui.balanceLabel.setText(f"Saldo Token: {balance}")
             self.ui.label_home_token.setText(f"{balance}")
             self.ui.transaction_addressLabel.setText(f"Saldo Token: {balance}")
-            print(f"Saldo dell'indirizzo {address}: {balance} MTK")
         except Exception as e:
             self.ui.balanceLabel.setText(f"Errore: {str(e)}")
 

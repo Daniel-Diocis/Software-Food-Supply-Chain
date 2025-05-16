@@ -1568,7 +1568,7 @@ color:rgb(255, 255, 255)</string>
         <item>
          <widget class="QStackedWidget" name="stackedWidgetInterno">
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="page_home">
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -1918,6 +1918,27 @@ color:rgb(255, 255, 255)</string>
               </item>
               <item>
                <widget class="QLineEdit" name="transaction_amountInput">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_27">
+              <item>
+               <widget class="QLabel" name="label_27">
+                <property name="text">
+                 <string>Immetti la tua private key: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="transaction_privateKeyInput">
                 <property name="minimumSize">
                  <size>
                   <width>100</width>
