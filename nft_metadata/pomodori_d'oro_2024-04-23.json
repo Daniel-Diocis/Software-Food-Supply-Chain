@@ -1,0 +1,17 @@
+{
+  "name": "pomodori d'oro",
+  "description": "pomodori di lusso dajeeee",
+  "image": "assets/pomodori.png",
+  "origin": "La cassa d'oro",
+  "producer": "Il papa",
+  "certification": "Vaticano",
+  "sustainability_score": 80,
+  "quantity": "1 kg",
+  "harvest_date": "2024-04-23",
+  "expiry_date": "2025-05-09",
+  "owner": "0x9ce2cC33b028Bc6E9b0B4b26c8334368494541bf",
+  "token_id": 17,
+  "ownership_history": [
+    "0x9ce2cC33b028Bc6E9b0B4b26c8334368494541bf"
+  ]
+}

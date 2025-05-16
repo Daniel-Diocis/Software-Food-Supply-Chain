@@ -7,18 +7,21 @@ class MyTokenContract:
         self.web3 = connector.get_web3()
         self.contract = connector.get_contract()
         self.account = self.web3.eth.accounts[0]
+
+        # Leggi il numero di decimali dal contratto
+        self.decimals = self.contract.functions.decimals().call()
+
         print(f"Contract loaded: {self.contract}")
         print(f"Account: {self.account}")
+        print(f"Token decimals: {self.decimals}")
 
     def mint_tokens(self, address, amount):
-        amount = int(amount) * 10**18
-        if amount == 0:
+        scaled_amount = int(float(amount) * (10 ** self.decimals))
+        if scaled_amount == 0:
             raise ValueError("L'importo non può essere zero")
 
         try:
-            print(f"Address: {address}")
-            print(f"Amount: {amount}")
-            tx = self.contract.functions.mint(address, amount).build_transaction({
+            tx = self.contract.functions.mint(address, scaled_amount).build_transaction({
                 'from': self.account,
                 'nonce': self.web3.eth.get_transaction_count(self.account),
                 'gas': 2000000,
@@ -32,13 +35,12 @@ class MyTokenContract:
             raise
 
     def burn_tokens(self, amount):
-        amount = int(amount) * 10**18
-        if amount <= 0:
+        scaled_amount = int(float(amount) * (10 ** self.decimals))
+        if scaled_amount <= 0:
             raise ValueError("L'importo deve essere maggiore di zero")
 
         try:
-            print(f"Burning {amount} token da {self.account}")
-            tx = self.contract.functions.burn(amount).build_transaction({
+            tx = self.contract.functions.burn(scaled_amount).build_transaction({
                 'from': self.account,
                 'nonce': self.web3.eth.get_transaction_count(self.account),
                 'gas': 2000000,
@@ -52,16 +54,14 @@ class MyTokenContract:
             raise
         
     def transfer_tokens(self, to_address, amount):
-        amount = int(amount) * 10**18  # Converti in Wei
-
+        scaled_amount = int(float(amount) * (10 ** self.decimals))
         try:
-            tx = self.contract.functions.transfer(to_address, amount).build_transaction({
+            tx = self.contract.functions.transfer(to_address, scaled_amount).build_transaction({
                 'from': self.account,
                 'nonce': self.web3.eth.get_transaction_count(self.account),
                 'gas': 2000000,
                 'gasPrice': self.web3.to_wei('10', 'gwei')
             })
-
             signed_tx = self.web3.eth.account.sign_transaction(tx, private_key='0xbfa8471445678988529d065e2d7f4dec55a6180beffc2a4310ef1bc0db0fe754')
             tx_hash = self.web3.eth.send_raw_transaction(signed_tx.raw_transaction)
             return self.web3.to_hex(tx_hash)
@@ -71,19 +71,18 @@ class MyTokenContract:
 
     def get_balance(self, address):
         try:
-            print(f"Chiamando balanceOf per l'indirizzo: {address}")
-            balance = self.contract.functions.balanceOf(address).call()
-            print(f"Saldo di {address} nella funzione contract: {balance}")
+            balance_raw = self.contract.functions.balanceOf(address).call()
+            balance = balance_raw / (10 ** self.decimals)
+            print(f"Saldo dell'indirizzo {address}: {balance} MTK")
             return balance
         except Exception as e:
-            print(f"Errore nel recupero del saldo per l'indirizzo {address}: {str(e)}")
+            print(f"Errore nel recupero del saldo: {e}")
             return 0
 
     def get_total_supply(self):
         try:
-            total_supply = self.contract.functions.totalSupply().call()
-            print(f"Total supply: {total_supply}")
-            return total_supply
+            total = self.contract.functions.totalSupply().call()
+            return total / (10 ** self.decimals)
         except Exception as e:
-            print(f"Error getting total supply: {e}")
+            print(f"Errore nel total supply: {e}")
             raise

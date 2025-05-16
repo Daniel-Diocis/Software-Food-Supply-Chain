@@ -13,6 +13,10 @@ contract MyToken is ERC20, Ownable {
         transferOwnership(initialOwner); // Imposta il proprietario del contratto
     }
 
+    function decimals() public view virtual override returns (uint8) {
+        return 2; // ad esempio: 2 decimali → 1.23 token è rappresentato come 123
+    }
+
     /// @notice Permette al proprietario di mintare o burnare token
     /// @param to l'indirizzo destinatario
     /// @param amount quantità da mintare (> 0) o burnare (< 0)

@@ -376,25 +376,20 @@ class FinestraPrincipale(QMainWindow):
             self.ui.mintingLabel.setText("Errore: Indirizzo Ethereum non valido.")
             return
 
-        # Verifica se amount_str è un numero valido prima della conversione
-        if not amount_str.isdigit():
-            self.ui.mintingLabel.setText("Errore: L'importo deve essere un numero valido.")
-            print(f"Errore: '{amount_str}' non è un numero valido.")
-            return
-
-        # Convertire amount_str in un intero
+        # Prova a convertire direttamente in float
         try:
-            amount = int(amount_str)
+            # Sostituisce la virgola con il punto, per compatibilità internazionale
+            amount_str = amount_str.replace(',', '.')
+            amount = round(float(amount_str), 2)
 
             if amount <= 0:
                 self.ui.mintingLabel.setText("Errore: L'importo deve essere maggiore di zero.")
                 return
 
-            # Proviamo a fare la transazione con l'importo convertito
             tx_hash = self.contract.mint_tokens(address, amount)
             self.ui.mintingLabel.setText(f"Transazione inviata: {tx_hash}")
             self.ui.burningLabel.setText(f"")
-            self.check_balance()  # Aggiorna il saldo dopo la mint
+            self.check_balance()
 
         except ValueError:
             self.ui.mintingLabel.setText("Errore: L'importo deve essere un numero valido.")
@@ -413,12 +408,9 @@ class FinestraPrincipale(QMainWindow):
             self.ui.burningLabel.setText("Errore: Indirizzo Ethereum non valido.")
             return
 
-        if not amount_str.isdigit():
-            self.ui.burningLabel.setText("Errore: L'importo deve essere un numero valido.")
-            return
-
         try:
-            amount = int(amount_str)
+            # Sostituisce la virgola con punto e arrotonda a 2 decimali
+            amount = round(float(amount_str.replace(',', '.')), 2)
 
             if amount <= 0:
                 self.ui.burningLabel.setText("Errore: L'importo deve essere maggiore di zero.")
@@ -426,12 +418,16 @@ class FinestraPrincipale(QMainWindow):
 
             # Per fare il burn usiamo un valore negativo
             burn_amount = -amount
-            tx_hash = self.contract.mint_tokens(address, burn_amount)  # Ricicliamo mint_tokens per gestire anche il burn
+            tx_hash = self.contract.mint_tokens(address, burn_amount)
 
             self.ui.burningLabel.setText(f"🔥 Token bruciati! TX hash: {tx_hash}")
-            self.ui.mintingLabel.setText(f"")
-            self.check_balance()  # Aggiorna il saldo dopo il burn
+            self.ui.mintingLabel.setText("")
+            self.check_balance()
             print(f"Bruciati {amount} token per {address}")
+
+        except ValueError:
+            self.ui.burningLabel.setText("Errore: L'importo deve essere un numero valido.")
+            print(f"Errore durante la conversione dell'importo: '{amount_str}'")
         except Exception as e:
             self.ui.burningLabel.setText(f"Errore durante il burn: {str(e)}")
             
@@ -448,20 +444,21 @@ class FinestraPrincipale(QMainWindow):
             self.ui.transferLabel.setText("Errore: Uno degli indirizzi Ethereum non è valido.")
             return
 
-        if not amount_str.isdigit():
-            self.ui.transferLabel.setText("Errore: L'importo deve essere un numero valido.")
-            return
-
         try:
-            amount = int(amount_str)
+            # Converte virgole in punti e arrotonda a due cifre
+            amount = round(float(amount_str.replace(',', '.')), 2)
 
             if amount <= 0:
                 self.ui.transferLabel.setText("Errore: L'importo deve essere maggiore di zero.")
                 return
 
             tx_hash = self.contract.transfer_tokens(address_to, amount)
-            self.check_balance()  # Aggiorna il saldo dopo il trasferimento
+            self.check_balance()
             self.ui.transferLabel.setText(f"✅ Token inviati! TX hash: {tx_hash}")
+
+        except ValueError:
+            self.ui.transferLabel.setText("Errore: L'importo deve essere un numero valido.")
+            print(f"Errore durante la conversione dell'importo: '{amount_str}'")
         except Exception as e:
             self.ui.transferLabel.setText(f"Errore nel trasferimento: {str(e)}")
 
@@ -477,10 +474,10 @@ class FinestraPrincipale(QMainWindow):
 
         try:
             balance = self.contract.get_balance(address)
-            self.ui.balanceLabel.setText(f"Saldo Token: {balance / 10**18}")
-            self.ui.label_home_token.setText(f"{balance / 10**18}")
-            self.ui.transaction_addressLabel.setText(f"Saldo Token: {balance / 10**18}")
-            print(f"Saldo dell'indirizzo {address}: {balance / 10**18} MTK")
+            self.ui.balanceLabel.setText(f"Saldo Token: {balance}")
+            self.ui.label_home_token.setText(f"{balance}")
+            self.ui.transaction_addressLabel.setText(f"Saldo Token: {balance}")
+            print(f"Saldo dell'indirizzo {address}: {balance} MTK")
         except Exception as e:
             self.ui.balanceLabel.setText(f"Errore: {str(e)}")
 
@@ -555,12 +552,45 @@ class FinestraPrincipale(QMainWindow):
         nome_file = f"{nome.replace(' ', '_')}_{data_raccolta}.json"
         path_file = os.path.join(metadata_dir, nome_file)
 
+        # Scrivi il JSON temporaneo
         with open(path_file, 'w') as f:
             json.dump(json_data, f, indent=2)
 
-        print(f"JSON NFT creato in: {path_file}")
-        self.mint_nft(path_file)
+        print(f"✅ JSON NFT creato in: {path_file}")
+
+        # 🔥 MINT e AGGIORNA JSON con tokenId e ownershipHistory
+        tx_hash, token_id = self.nft_contract.mint_product_nft(address, path_file)
+        print(f"✅ Mintato NFT con ID {token_id} per {address}. TX: {tx_hash}")
+
+        # 📜 Ottieni lo storico dei possessori
+        history = self.nft_contract.get_ownership_history(token_id)
+
+        # 🔁 Riapri il JSON, aggiorna e risalva
+        with open(path_file, 'r') as f:
+            updated_data = json.load(f)
+
+        updated_data["token_id"] = token_id
+        updated_data["ownership_history"] = history
+
+        with open(path_file, 'w') as f:
+            json.dump(updated_data, f, indent=2)
+
+        # Log/GUI
+        self.ui.text_output.append(f"✅ NFT registrato!\nToken ID: {token_id}\nTX Hash: {tx_hash}")
+        self.popola_nft_widget()  # Popola la pagina NFT con gli NFT dell'utente
+        self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_NFT)
         
+        # Pulisce i campi dopo la creazione
+        self.ui.mintNFT_namefield.clear()
+        self.ui.mintNFT_descriptionfield.clear()
+        self.ui.mintNFT_imagecomboBox.setCurrentIndex(0)
+        self.ui.mintNFT_originfield.clear()
+        self.ui.mintNFT_producerfield.clear()
+        self.ui.mintNFT_certificationfield.clear()
+        self.ui.mintNFT_sustainabilityspinBox.setValue(0)
+        self.ui.mintNFT_quantityfield.clear()
+        self.ui.mintNFT_harvestdate.setDate(QtCore.QDate.currentDate())
+        self.ui.mintNFT_expirydate.setDate(QtCore.QDate.currentDate())
         
 if __name__ == "__main__":
      app = QApplication(sys.argv)

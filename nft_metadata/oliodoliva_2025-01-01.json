@@ -1,0 +1,17 @@
+{
+  "name": "oliodoliva",
+  "description": "olioooo",
+  "image": "assets/olio.png",
+  "origin": "orto",
+  "producer": "me",
+  "certification": "UE",
+  "sustainability_score": 75,
+  "quantity": "10 L",
+  "harvest_date": "2025-01-01",
+  "expiry_date": "2025-11-01",
+  "owner": "0x9ce2cC33b028Bc6E9b0B4b26c8334368494541bf",
+  "token_id": 15,
+  "ownership_history": [
+    "0x9ce2cC33b028Bc6E9b0B4b26c8334368494541bf"
+  ]
+}
