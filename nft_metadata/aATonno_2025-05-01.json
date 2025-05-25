@@ -1,0 +1,18 @@
+{
+  "name": "aATonno",
+  "description": "tonno per vivere\ntonno per scoprire\nriomare\nsapore di mare",
+  "image": "assets/tonno.png",
+  "origin": "mare",
+  "producer": "pescatore",
+  "certification": "assets/certifications/pesce-sostenibile.png",
+  "quantity": "10 kg",
+  "harvest_date": "2025-05-01",
+  "expiry_date": "2010-06-01",
+  "owner": "0x9ce2cC33b028Bc6E9b0B4b26c8334368494541bf",
+  "risparmio_co2": -3.0,
+  "usable": true,
+  "token_id": 21,
+  "ownership_history": [
+    "0x9ce2cC33b028Bc6E9b0B4b26c8334368494541bf"
+  ]
+}

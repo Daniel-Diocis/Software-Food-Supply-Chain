@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QHeaderView, QLabel, QVBo
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import  QPropertyAnimation,QEasingCurve, Qt
 from PyQt5 import QtCore, QtWidgets
+from functools import partial
 from interfacciaUtente import Ui_MainWindow
 from connessione_sqlite import Comunicazione
 from onChain import MyTokenContract, BlockchainConnector, SupplyChainNFT
@@ -60,6 +61,9 @@ class FinestraPrincipale(QMainWindow):
         self.ui.btn_transfer.clicked.connect(self.transfer_nft)
         self.ui.btn_history.clicked.connect(self.show_history)
         self.ui.mintNFT_mintNFTbutton.clicked.connect(self.crea_json_nft)
+        self.ui.azioniNormali_eseguiButton.clicked.connect(self.esegui_azioneNormale)
+        self.ui.azioniCompensative_mintingButton.clicked.connect(self.esegui_azioneCompensativa)
+        self.ui.transferNFT_btnTransfer.clicked.connect(self.transferNFT)
         
         self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_welcome)
         
@@ -70,6 +74,9 @@ class FinestraPrincipale(QMainWindow):
         self.ui.bt_logout.clicked.connect(self.effettua_logout)
         self.ui.bt_modProfilo_salva.clicked.connect(self.modifica_profilo)
         
+        self.ui.azioniNormali_azioneComboBox.currentIndexChanged.connect(self.aggiorna_dettagli_azione)
+        self.ui.azioniNormali_trasformaInTokenButton.clicked.connect(self.calcola_token)
+        
         # connessione bottoni alle pagine
         self.ui.bt_welcome_accedi.clicked.connect(lambda: self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_login))
         self.ui.bt_welcome_registrati.clicked.connect(lambda: self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_register))
@@ -78,10 +85,83 @@ class FinestraPrincipale(QMainWindow):
         self.ui.bt_home.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_home))
         self.ui.bt_profilo.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_profilo))
         self.ui.bt_profilo_modifica.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_modProfilo))
-        self.ui.bt_azioni.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_azioni))
+        self.ui.bt_azioniNormali.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_azioniNormali))
+        self.ui.bt_azioniCompensative.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_azioniCompensative))
         self.ui.bt_transazioni.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_transazioni))
-        self.ui.bt_statistiche.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_NFT))
+        self.ui.bt_NFT.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_NFT))
         self.ui.pushButton.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_mintNFT))
+    
+    def carica_combo_azioni(self):
+        azioni = self.database.carica_azioni_nella_combobox()
+        self.ui.azioniNormali_azioneComboBox.clear()
+        for azione in azioni:
+            self.ui.azioniNormali_azioneComboBox.addItem(azione[0])
+            
+    def aggiorna_dettagli_azione(self):
+        # Ottieni il nome dell'azione selezionata nella ComboBox
+        azione = self.ui.azioniNormali_azioneComboBox.currentText()
+        
+        # Recupera l'unità di riferimento dal DB
+        info = self.database.get_info_azione(azione)
+        
+        # Aggiorna la label con l'unità, se esiste
+        if info:
+            self.ui.azioniNormali_unitaDiMisuraLabel.setText(info["unita_di_riferimento"])
+            self.ui.azioniNormali_riferimentoPraticoLabel.setText(info["riferimento"])
+        else:
+            self.ui.azioniNormali_unitaDiMisuraLabel.setText("N/A")
+            self.ui.azioniNormali_riferimentoPraticoLabel.setText("N/A")
+    
+    def popola_combobox_NFT(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        address = self.database.get_address(id)
+        
+        print(">>> Inizio popolamento comboBox nft")
+
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        print(f"Percorso base calcolato: {base_dir}")
+
+        nft_dir = os.path.join(base_dir, "nft_metadata")
+        print(f"Percorso completo nft: {nft_dir}")
+
+        if not os.path.exists(nft_dir):
+            print(f"⚠️  Cartella nft_metadata NON trovata in: {nft_dir}")
+            return
+
+        print(f"✅ Cartella nft trovata")
+
+        estensioni_nft = ('.json')
+        nft = []
+
+        for f in os.listdir(nft_dir):
+            if f.lower().endswith('.json'):
+                path = os.path.join(nft_dir, f)
+                try:
+                    with open(path, 'r') as file:
+                        data = json.load(file)
+                        owner = data.get("owner", "").lower()
+                        usable = data.get("usable", False)
+                        
+                        if owner == address.lower() and usable is True:
+                            nft.append(f)
+                            print(f"➕ Aggiunto (owner match e usable): {f}")
+                        else:
+                            print(f"❌ Escluso: owner ≠ address o usable ≠ true → {f}")
+                except Exception as e:
+                    print(f"⚠️ Errore nel parsing del file {f}: {e}")
+            else:
+                print(f"❌ Ignorato (non JSON): {f}")
+
+        if not nft:
+            print("⚠️  Nessun NFT valido trovato nella cartella nft_metadata.")
+        else:
+            print(f"🎉 NFT validi trovati: {nft}")
+
+        self.ui.azioniNormali_NFTcomboBox.clear()
+        self.ui.azioniNormali_NFTcomboBox.addItems(nft)
+        print(f"✅ Caricate {len(nft)} nft nella comboBox.")
+        print(">>> Fine popolamento comboBox nft")
     
     def popola_combobox_immagini(self):
         print(">>> Inizio popolamento comboBox immagini")
@@ -118,6 +198,42 @@ class FinestraPrincipale(QMainWindow):
         self.ui.mintNFT_imagecomboBox.addItems(immagini)
         print(f"✅ Caricate {len(immagini)} immagini nella comboBox.")
         print(">>> Fine popolamento comboBox immagini")
+        
+    def popola_combobox_certificazioni(self):
+        print(">>> Inizio popolamento comboBox certificazioni")
+
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        print(f"Percorso base calcolato: {base_dir}")
+
+        certifications_dir = os.path.join(base_dir, "assets/certifications")
+        print(f"Percorso completo certifications: {certifications_dir}")
+
+        if not os.path.exists(certifications_dir):
+            print(f"⚠️  Cartella certifications NON trovata in: {certifications_dir}")
+            return
+
+        print(f"✅ Cartella certifications trovata")
+
+        estensioni_certificazioni = ('.png', '.jpg', '.jpeg', '.gif')
+        certificazioni = []
+
+        for f in os.listdir(certifications_dir):
+            print(f"Esaminando file: {f}")
+            if f.lower().endswith(estensioni_certificazioni):
+                certificazioni.append(f)
+                print(f"➕ Aggiunto: {f}")
+            else:
+                print(f"❌ Ignorato (non certificazione): {f}")
+
+        if not certificazioni:
+            print("⚠️  Nessuna certificazione valida trovata nella cartella assets.")
+        else:
+            print(f"🎉 Certificazioni trovate: {certificazioni}")
+
+        self.ui.mintNFT_certificationcomboBox.clear()
+        self.ui.mintNFT_certificationcomboBox.addItems(certificazioni)
+        print(f"✅ Caricate {len(certificazioni)} certificazioni nella comboBox.")
+        print(">>> Fine popolamento comboBox certificazioni")
     
     def popola_nft_widget(self):
         utente = self.database.get_utente_per_id()
@@ -141,7 +257,17 @@ class FinestraPrincipale(QMainWindow):
                 with open(path, 'r') as f:
                     try:
                         data = json.load(f)
-                        if data.get("owner", "").lower() == address.lower():
+                        token_id = int(data.get("token_id"))
+                        usable = data.get("usable", False)
+
+                        try:
+                            onchain_owner = self.nft_contract.contract.functions.ownerOf(token_id).call()
+                        except Exception as e:
+                            print(f"⚠️ Token {token_id} non valido o già bruciato: {e}")
+                            continue
+
+                        if onchain_owner.lower() == address.lower() and usable:
+                            # (prosegui con costruzione dell'NFT visuale)
                             # === Crea layout orizzontale per ogni NFT ===
                             hbox = QHBoxLayout()
 
@@ -164,7 +290,9 @@ class FinestraPrincipale(QMainWindow):
                             # Bottone per trasferimento NFT
                             transfer_button = QPushButton("Trasferisci")
                             transfer_button.setStyleSheet("background-color: #4CAF50; color: white; padding: 5px;")
-                            transfer_button.clicked.connect(lambda _, token_id=data.get('token_id'): self.transfer_nft(token_id))
+                            transfer_button.clicked.connect(
+                                partial(self.handle_transfer_click, data, data.get('token_id'))
+                            )
                             hbox.addWidget(transfer_button)
 
                             # Container per la riga
@@ -183,6 +311,26 @@ class FinestraPrincipale(QMainWindow):
         container = QWidget()
         container.setLayout(layout)
         self.ui.scrollArea.setWidget(container)
+        
+    def handle_transfer_click(self, json_data, token_id):
+        # Mostra la pagina di trasferimento
+        self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_transferNFT)
+        
+        # Costruisci il percorso assoluto dell’immagine se serve
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        img_path = os.path.join(base_dir, json_data.get('image'))
+
+        # Carica e imposta l’immagine
+        pixmap = QPixmap(img_path)
+        if not pixmap.isNull():
+            self.ui.transferNFT_image.setPixmap(pixmap.scaledToWidth(200))  # o .scaled(width, height)
+        else:
+            print("❌ Immagine non trovata o non valida:", img_path)
+        self.ui.transferNFT_name.setText(json_data.get('name'))
+        
+        # Salva temporaneamente i dati per uso futuro
+        self.selected_nft_data = json_data
+        self.selected_token_id = token_id
     
     def registra_utente(self):
         email = self.ui.register_emailfield.text().strip()
@@ -307,7 +455,10 @@ class FinestraPrincipale(QMainWindow):
                     self.ui.login_passwordfield.setText("")
                     self.ui.login_signalError.setText("")  # Pulisce il messaggio di errore
                     
+                    self.carica_combo_azioni()  # Popola la comboBox delle azioni
+                    self.popola_combobox_NFT()  # Popola la comboBox degli NFT
                     self.popola_combobox_immagini()  # Popola la comboBox delle immagini
+                    self.popola_combobox_certificazioni()  # Popola la comboBox delle certificazioni
                     self.popola_nft_widget()  # Popola la pagina NFT con gli NFT dell'utente
                 else:
                     self.ui.login_signalError.setText("Errore: Impossibile recuperare i dati dell'utente.")
@@ -363,12 +514,91 @@ class FinestraPrincipale(QMainWindow):
             self.ui.editText_modProfilo_confermaNuovaPasswordfield.setText("")
         else:
             self.ui.modProfilo_signalError.setText("Errore durante l'aggiornamento del profilo")
+    
+    def calcola_token(self):
+        """
+        Calcola i token da mintare (+) o burnare (-)
+        :param nome_azione: nome dell’azione scelta
+        :param quantita: quantità dell’attività svolta (es. 2.5 tonnellate)
+        :param emissioni_registrate_totali: emissioni effettive totali CO2e generate
+        :return: dizionario con info e token
+        """
+        nome_azione = self.ui.azioniNormali_azioneComboBox.currentText()
+        quantita = self.ui.azioniNormali_quantitaDoubleSpinBox.value()
+        emissioni_registrate_totali = self.ui.azioniNormali_CO2emessaDoubleSpinBox.value()
+        
+        info = self.database.get_info_azione(nome_azione)
+        if not info:
+            raise ValueError("Azione non trovata nel database.")
+
+        # Emissione media per unità operativa
+        unita_di_misura = info["unita_di_riferimento"]  # es. "ton", "kg", "km"
+        emissione_media_unitaria = float(info["emissioni_medie"])
+        riferimento = info["riferimento"]  # es. "1 ton", "100 kg", "100 km"
+        
+        # Calcolo emissioni attese in base alla quantità
+        emissioni_attese_totali = emissione_media_unitaria * quantita
+
+        # Differenza = risparmio o eccesso
+        delta = round(emissioni_attese_totali - emissioni_registrate_totali, 2)
+        token = abs(delta)  # Token da mintare o burnare
+        # Determina se mintare o burnare
+        if delta > 0:
+            azione_token = "mint"
+        elif delta < 0:
+            azione_token = "burn"
+        else:
+            azione_token = "neutro"
             
-    def mint_tokens(self):
+        self.ui.azioniNormali_trasformazioneInTokenLabel.setText(f"Token da {azione_token}: {token}")
+        self.ui.azioniNormali_TxHashLabel.setText(f"Azione: {nome_azione}\nQuantità: {quantita} {unita_di_misura}\nEmissioni attese: {emissioni_attese_totali} CO2e\nEmissioni registrate: {emissioni_registrate_totali} CO2e\nDelta: {delta} CO2e\nToken da {azione_token}: {token}")
+    
+    def esegui_azioneNormale(self):
+        nft = self.ui.azioniNormali_NFTcomboBox.currentText().strip()
+        nome_azione = self.ui.azioniNormali_azioneComboBox.currentText()
+        quantita = self.ui.azioniNormali_quantitaDoubleSpinBox.value()
+        emissioni_registrate_totali = self.ui.azioniNormali_CO2emessaDoubleSpinBox.value()
+        
+        info = self.database.get_info_azione(nome_azione)
+        if not info:
+            raise ValueError("Azione non trovata nel database.")
+
+        # Emissione media per unità operativa
+        unita_di_misura = info["unita_di_riferimento"]  # es. "ton", "kg", "km"
+        emissione_media_unitaria = float(info["emissioni_medie"])
+        riferimento = info["riferimento"]  # es. "1 ton", "100 kg", "100 km"
+        
+        # Calcolo emissioni attese in base alla quantità
+        emissioni_attese_totali = emissione_media_unitaria * quantita
+
+        # Differenza = risparmio o eccesso
+        delta = round(emissioni_attese_totali - emissioni_registrate_totali, 2)
+        token = abs(delta)  # Token da mintare o burnare
+        # Determina se mintare o burnare
+        if delta > 0:
+            azione_token = "mint"
+            self.mint_tokens(token)
+            self.ui.azioniNormali_TxHashLabel.setText(f"Token mintati: {token}")
+            self.aggiorna_risparmio_co2_nft(nft, token, "mint")
+        elif delta < 0:
+            azione_token = "burn"
+            self.burn_tokens(token)
+            self.ui.azioniNormali_TxHashLabel.setText(f"Token bruciati: {token}")
+            self.aggiorna_risparmio_co2_nft(nft, token, "burn")
+        else:
+            azione_token = "neutro"
+            self.ui.azioniNormali_TxHashLabel.setText("Nessuna azione necessaria: emissioni attese e registrate coincidono.")
+            
+    def esegui_azioneCompensativa(self):
+        token = self.ui.azioniCompensative_CO2doubleSpinBox.value()
+        self.mint_tokens(token)
+        self.ui.azioniCompensative_mintingLabel.setText(f"Token mintati: {token}")
+    
+    def mint_tokens(self, token):
         utente = self.database.get_utente_per_id()
         id = str(utente['id']).strip()
-        amount_str = self.ui.amountInput.text().strip()
-        
+        # amount_str = self.ui.amountInput.text().strip()
+        amount = token
         address = self.database.get_address(id)
 
         # Validazione dell'indirizzo Ethereum
@@ -379,8 +609,8 @@ class FinestraPrincipale(QMainWindow):
         # Prova a convertire direttamente in float
         try:
             # Sostituisce la virgola con il punto, per compatibilità internazionale
-            amount_str = amount_str.replace(',', '.')
-            amount = round(float(amount_str), 2)
+            # amount_str = amount_str.replace(',', '.')
+            # amount = round(float(amount_str), 2)
 
             if amount <= 0:
                 self.ui.mintingLabel.setText("Errore: L'importo deve essere maggiore di zero.")
@@ -394,15 +624,15 @@ class FinestraPrincipale(QMainWindow):
 
         except ValueError:
             self.ui.mintingLabel.setText("Errore: L'importo deve essere un numero valido.")
-            print(f"Errore durante la conversione dell'importo: '{amount_str}'")
+            print(f"Errore durante la conversione dell'importo: '{token}'")
         except Exception as e:
             self.ui.mintingLabel.setText(f"Errore: {str(e)}")
             
-    def burn_tokens(self):
+    def burn_tokens(self, token):
         utente = self.database.get_utente_per_id()
         id = str(utente['id']).strip()
-        amount_str = self.ui.amountInput.text().strip()
-
+        # amount_str = self.ui.amountInput.text().strip()
+        amount = token
         address = self.database.get_address(id)
 
         if not self.is_valid_address(address):
@@ -411,7 +641,7 @@ class FinestraPrincipale(QMainWindow):
 
         try:
             # Sostituisce la virgola con punto e arrotonda a 2 decimali
-            amount = round(float(amount_str.replace(',', '.')), 2)
+            # amount = round(float(amount_str.replace(',', '.')), 2)
 
             if amount <= 0:
                 self.ui.burningLabel.setText("Errore: L'importo deve essere maggiore di zero.")
@@ -427,7 +657,7 @@ class FinestraPrincipale(QMainWindow):
 
         except ValueError:
             self.ui.burningLabel.setText("Errore: L'importo deve essere un numero valido.")
-            print(f"Errore durante la conversione dell'importo: '{amount_str}'")
+            print(f"Errore durante la conversione dell'importo: '{token}'")
         except Exception as e:
             self.ui.burningLabel.setText(f"Errore durante il burn: {str(e)}")
             
@@ -476,6 +706,8 @@ class FinestraPrincipale(QMainWindow):
             self.ui.balanceLabel.setText(f"Saldo Token: {balance}")
             self.ui.label_home_token.setText(f"{balance}")
             self.ui.transaction_addressLabel.setText(f"Saldo Token: {balance}")
+            self.ui.azioniNormali_balanceLabel.setText(f"Saldo Token: {balance}")
+            self.ui.azioniCompensative_balanceLabel.setText(f"Saldo Token: {balance}")
         except Exception as e:
             self.ui.balanceLabel.setText(f"Errore: {str(e)}")
 
@@ -518,11 +750,12 @@ class FinestraPrincipale(QMainWindow):
         immagine = self.ui.mintNFT_imagecomboBox.currentText().strip()
         origine = self.ui.mintNFT_originfield.text().strip()
         produttore = self.ui.mintNFT_producerfield.text().strip()
-        certificazione = self.ui.mintNFT_certificationfield.text().strip()
-        sostenibilita = self.ui.mintNFT_sustainabilityspinBox.value()
+        certificazione = self.ui.mintNFT_certificationcomboBox.currentText().strip()
         quantita = self.ui.mintNFT_quantityfield.text().strip()
         data_raccolta = self.ui.mintNFT_harvestdate.date().toString("yyyy-MM-dd")
         data_scadenza = self.ui.mintNFT_expirydate.date().toString("yyyy-MM-dd")
+        saldo_co2 = 0  # Placeholder per il saldo CO2, se necessario
+        utlizzabile = True
 
         if not nome or not immagine:
             print("Nome o immagine mancanti, impossibile creare JSON.")
@@ -534,12 +767,13 @@ class FinestraPrincipale(QMainWindow):
             "image": f"assets/{immagine}",
             "origin": origine,
             "producer": produttore,
-            "certification": certificazione,
-            "sustainability_score": sostenibilita,
+            "certification": f"assets/certifications/{certificazione}",
             "quantity": quantita,
             "harvest_date": data_raccolta,
             "expiry_date": data_scadenza,
-            "owner": address
+            "owner": address,
+            "risparmio_co2": saldo_co2,
+            "usable": utlizzabile
         }
 
         # Percorso cartella nft_metadata
@@ -584,11 +818,49 @@ class FinestraPrincipale(QMainWindow):
         self.ui.mintNFT_imagecomboBox.setCurrentIndex(0)
         self.ui.mintNFT_originfield.clear()
         self.ui.mintNFT_producerfield.clear()
-        self.ui.mintNFT_certificationfield.clear()
-        self.ui.mintNFT_sustainabilityspinBox.setValue(0)
+        self.ui.mintNFT_certificationcomboBox.setCurrentIndex(0)
         self.ui.mintNFT_quantityfield.clear()
         self.ui.mintNFT_harvestdate.setDate(QtCore.QDate.currentDate())
         self.ui.mintNFT_expirydate.setDate(QtCore.QDate.currentDate())
+        
+    def aggiorna_risparmio_co2_nft(self, json_filename, delta_token, operazione):
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        path = os.path.join(base_dir, "nft_metadata", json_filename)
+
+        try:
+            with open(path, 'r') as f:
+                data = json.load(f)
+
+            saldo_attuale = float(data.get("risparmio_co2", 0))
+
+            if operazione == "mint":
+                saldo_attuale += delta_token
+            elif operazione == "burn":
+                saldo_attuale -= delta_token
+
+            data["risparmio_co2"] = round(saldo_attuale, 2)
+
+            with open(path, 'w') as f:
+                json.dump(data, f, indent=2)
+
+            print(f"✅ risparmio_co2 aggiornato per {json_filename}: {data['risparmio_co2']}")
+
+        except Exception as e:
+            print(f"❌ Errore aggiornando risparmio_co2 per {json_filename}: {e}")
+        
+    def transferNFT(self, token_id):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        from_address = self.database.get_address(id)
+        
+        to_address = self.ui.transferNFT_inputTransferTo.text().strip()
+        private_key = self.ui.transferNFT_inputPrivateKey.text().strip()
+        token_id = int(self.selected_token_id)
+
+        if from_address and private_key and to_address and token_id >= 0:
+            tx_hash = self.nft_contract.transfer_product_nft(from_address, to_address, token_id, private_key)
+            # self.ui.text_output.append(f"Trasferito! TX: {tx_hash}")
+            print(f"Trasferito NFT con ID {token_id} da {from_address} a {to_address}. TX: {tx_hash}")
         
 if __name__ == "__main__":
      app = QApplication(sys.argv)

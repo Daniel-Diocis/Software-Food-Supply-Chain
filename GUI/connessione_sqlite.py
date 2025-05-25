@@ -162,3 +162,29 @@ class Comunicazione():
             return result[0]
         else:
             return
+        
+    def carica_azioni_nella_combobox(self):
+        """Carica le azioni nella combobox"""
+        cursor = self.connessione.cursor()
+        cursor.execute("SELECT azione FROM tabella_azioni")
+        azioni = cursor.fetchall()
+        cursor.close()
+        return azioni
+    
+    def get_info_azione(self, nome_azione):
+        """Restituisce un dizionario con: unità di riferimento, emissioni medie e riferimento"""
+        cursor = self.connessione.cursor()
+        cursor.execute(
+            "SELECT unita_di_riferimento, emissioni_medie, riferimento FROM tabella_azioni WHERE azione = ?",
+            (nome_azione,)
+        )
+        risultato = cursor.fetchone()
+        cursor.close()
+        if risultato:
+            return {
+                'unita_di_riferimento': risultato[0],
+                'emissioni_medie': risultato[1],
+                'riferimento': risultato[2]
+            }
+        else:
+            return None
