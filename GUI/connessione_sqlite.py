@@ -8,7 +8,7 @@ class Comunicazione():
         self.utente_loggato = None  # Attributo per memorizzare l'ID dell'utente loggato
     
     
-    def registra_utente(self, email, password, iva, nome, tipologia, indirizzo, telefono, ragioneSociale, sustainability):
+    def registra_utente(self, email, password, iva, nome, tipologia, indirizzo, telefono, ragioneSociale, sustainability, address):
         """Registra i dati del nuovo utente"""
         cursor = self.connessione.cursor()
         
@@ -17,12 +17,12 @@ class Comunicazione():
 
         query = '''
             INSERT INTO tabella_utenti 
-            (EMAIL, PASSWORD, IVA, NOME, TIPOLOGIA, INDIRIZZO, TELEFONO, RAGIONE_SOCIALE, SUSTAINABILITY)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (EMAIL, PASSWORD, IVA, NOME, TIPOLOGIA, INDIRIZZO, TELEFONO, RAGIONE_SOCIALE, SUSTAINABILITY, ADDRESS)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         '''
 
         try:
-            cursor.execute(query, (email, hashed_password, iva, nome, tipologia, indirizzo, telefono, ragioneSociale, sustainability))
+            cursor.execute(query, (email, hashed_password, iva, nome, tipologia, indirizzo, telefono, ragioneSociale, sustainability, address))
             self.connessione.commit()
             print("Registrazione avvenuta con successo.")
         except sqlite3.IntegrityError:
@@ -63,7 +63,7 @@ class Comunicazione():
         cursor.execute("""
             SELECT id, email, password, iva, nome, tipologia, 
                 indirizzo, telefono, ragione_sociale, 
-                sustainability, nft, token, address
+                sustainability, nft, token, address, need_token
             FROM tabella_utenti 
             WHERE id = ?
         """, (self.utente_loggato,))
@@ -85,6 +85,7 @@ class Comunicazione():
                 'nft': user[10],
                 'token': user[11],
                 'address': user[12],
+                'need_token': user[13]
             }
         else:
             print("Errore: Utente non trovato.")
@@ -163,6 +164,31 @@ class Comunicazione():
         else:
             return
         
+    def help_token(self, id, needed_tokens):
+        """
+        Aggiorna il campo need_token se quello nuovo è maggiore del precedente.
+        """
+        cursor = self.connessione.cursor()
+        cursor.execute("SELECT need_token FROM tabella_utenti WHERE id = ?", (id,))
+        result = cursor.fetchone()
+
+        if result is not None:
+            current = float(result[0])
+            if needed_tokens != current:
+                cursor.execute(
+                    "UPDATE tabella_utenti SET need_token = ? WHERE id = ?",
+                    (needed_tokens, id)
+                )
+                self.connessione.commit()
+                cursor.close()
+                return True
+            else:
+                cursor.close()
+                return False  # già richiesto per importo uguale o maggiore
+        else:
+            cursor.close()
+            return False
+        
     def carica_azioni_nella_combobox(self):
         """Carica le azioni nella combobox"""
         cursor = self.connessione.cursor()
@@ -188,3 +214,30 @@ class Comunicazione():
             }
         else:
             return None
+        
+    def get_needed_users(self, id):
+        """Restituisce tutti gli utenti che hanno bisogno di token, escluso l'utente con l'id passato"""
+        cursor = self.connessione.cursor()
+        cursor.execute(
+            "SELECT id, nome, address, need_token FROM tabella_utenti WHERE need_token > 0 AND id != ?",
+            (id,)
+        )
+        results = cursor.fetchall()
+        cursor.close()
+
+        utenti = [{'id': r[0], 'nome': r[1], 'address': r[2], 'need_token': r[3]} for r in results]
+
+        if not utenti:
+            print("Nessun utente trovato che ha bisogno di token (escluso il richiedente).")
+
+        return utenti
+    
+    def reset_need_token(self, id):
+        """Reimposta il campo need_token a 0.0 per l'utente specificato"""
+        cursor = self.connessione.cursor()
+        cursor.execute(
+            "UPDATE tabella_utenti SET need_token = 0.0 WHERE id = ?",
+            (id,)
+        )
+        self.connessione.commit()
+        cursor.close()

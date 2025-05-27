@@ -902,6 +902,54 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
          </layout>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_70">
+          <item>
+           <spacer name="horizontalSpacer_85">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_42">
+            <property name="styleSheet">
+             <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+            <property name="text">
+             <string>Address</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="register_addressfield">
+            <property name="styleSheet">
+             <string notr="true">background-color:rgba(0,0,0,0);
+font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_84">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_29">
           <item>
            <spacer name="horizontalSpacer_40">
@@ -1595,7 +1643,7 @@ COMPENSATIVE</string>
         <item>
          <widget class="QStackedWidget" name="stackedWidgetInterno">
           <property name="currentIndex">
-           <number>1</number>
+           <number>4</number>
           </property>
           <widget class="QWidget" name="page_home">
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -1720,43 +1768,6 @@ COMPENSATIVE</string>
               </item>
               <item>
                <spacer name="horizontalSpacer_69">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_48">
-              <item>
-               <widget class="QLabel" name="label_25">
-                <property name="styleSheet">
-                 <string notr="true">font: 20pt &quot;MS Shell Dlg 2&quot;;color:rgb(255, 255, 255)</string>
-                </property>
-                <property name="text">
-                 <string>Sustainability : </string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_home_sustainability">
-                <property name="styleSheet">
-                 <string notr="true">font: 20pt &quot;MS Shell Dlg 2&quot;;color:rgb(255, 255, 255)</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_70">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -2248,11 +2259,25 @@ COMPENSATIVE</string>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="azioniNormali_TxHashLabel">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_48">
+              <item>
+               <widget class="QLabel" name="azioniNormali_TxHashLabel">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="azioniNormali_helpButton">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Chiedi aiuto</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QLabel" name="azioniNormali_balanceLabel">
@@ -2532,17 +2557,17 @@ COMPENSATIVE</string>
                    </size>
                   </property>
                   <property name="text">
-                   <string>Immetti l'id del destinatario: </string>
+                   <string>Seleziona il destinatario: </string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="transaction_recipientInput">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>40</height>
-                   </size>
+                 <widget class="QComboBox" name="transaction_recipientComboBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
                   </property>
                  </widget>
                 </item>
@@ -3359,7 +3384,7 @@ COMPENSATIVE</string>
               <item>
                <widget class="QLabel" name="label_54">
                 <property name="text">
-                 <string>Immetti l'address del destinatario: </string>
+                 <string>Immetti l'id del destinatario: </string>
                 </property>
                </widget>
               </item>

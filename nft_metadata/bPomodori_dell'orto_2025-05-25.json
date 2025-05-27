@@ -1,0 +1,18 @@
+{
+  "name": "bPomodori dell'orto",
+  "description": "Pomodori colvati in orto dal nonno\nproperite\u00e0 di famiglia\nla famiglia \u00e8 la famiglia\nil pomodoro \u00e8 la famiglia",
+  "image": "assets/pomodori.png",
+  "origin": "Orto di casa",
+  "producer": "Nonno",
+  "certification": "assets/certifications/agricoltura-biologica.png",
+  "quantity": "10 kg",
+  "harvest_date": "2025-05-25",
+  "expiry_date": "2025-06-07",
+  "owner": "0xEE029bC2728537A1E2387aAa558207bBe6f70203",
+  "risparmio_co2": 0,
+  "usable": true,
+  "token_id": 22,
+  "ownership_history": [
+    "0xEE029bC2728537A1E2387aAa558207bBe6f70203"
+  ]
+}

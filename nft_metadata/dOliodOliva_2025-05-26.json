@@ -1,0 +1,18 @@
+{
+  "name": "dOliodOliva",
+  "description": "olio d'oliva degli orti giuli\nprodotti agricoli\nrispetta tutte le restrizioni\noriginale\nagricolo\neco",
+  "image": "assets/olio.png",
+  "origin": "orti giuli pesaro",
+  "producer": "farmer di fiducia",
+  "certification": "assets/certifications/agricoltura-biologica.png",
+  "quantity": "10 L",
+  "harvest_date": "2025-05-26",
+  "expiry_date": "2025-08-13",
+  "owner": "0x3cd21E3Fc30437C46f9F4ea9DE460ECdc3C8c8c0",
+  "risparmio_co2": -32.5,
+  "usable": true,
+  "token_id": 24,
+  "ownership_history": [
+    "0x3cd21E3Fc30437C46f9F4ea9DE460ECdc3C8c8c0"
+  ]
+}

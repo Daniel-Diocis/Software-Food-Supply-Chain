@@ -51,6 +51,8 @@ class FinestraPrincipale(QMainWindow):
             print(f" | Contratto NFT ok")
         except Exception as e:
             print(f" | NFT errore: {str(e)}")
+            
+        self.needed_tokens = 0
 
         # Connessione dei bottoni alle funzioni
         self.ui.mintButton.clicked.connect(self.mint_tokens)
@@ -64,6 +66,7 @@ class FinestraPrincipale(QMainWindow):
         self.ui.azioniNormali_eseguiButton.clicked.connect(self.esegui_azioneNormale)
         self.ui.azioniCompensative_mintingButton.clicked.connect(self.esegui_azioneCompensativa)
         self.ui.transferNFT_btnTransfer.clicked.connect(self.transferNFT)
+        self.ui.azioniNormali_helpButton.clicked.connect(self.help_tokens)
         
         self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_welcome)
         
@@ -335,6 +338,7 @@ class FinestraPrincipale(QMainWindow):
     def registra_utente(self):
         email = self.ui.register_emailfield.text().strip()
         password = self.ui.register_passwordfield.text().strip()
+        address = self.ui.register_addressfield.text().strip()
         iva = self.ui.register_ivafield.text().strip()
         nome = self.ui.register_nomefield.text().strip()
         tipologia = self.ui.register_tipologiacomboBox.currentText().strip()
@@ -342,16 +346,34 @@ class FinestraPrincipale(QMainWindow):
         telefono = self.ui.register_telefonofield.text().strip()
         ragioneSociale = self.ui.register_ragionesocialefield.text().strip()
         sustainability = self.ui.register_sustainabilitydoubleSpinBox.value()
+        token = 0  # Inizializza i token a 0
+        SOGLIA_CO2 = {
+            "Farmer and Fisher": 25,
+            "Manufacturer": 100,
+            "Packer": 20,
+            "Storage": 40,
+            "Waste": 15,
+            "Carrier": 80,
+            "Retailer": 50,
+            "Food and Beverage Hospitality": 35,
+            "Client": 10
+        }
         
+        if sustainability >= SOGLIA_CO2[tipologia]:
+            self.ui.register_signalError.setText("Emissioni troppo alte per {tipologia}: {sustainability} >= {SOGLIA_CO2[tipologia]}. Registrazione negata.")
+            print(f"Emissioni troppo alte per {tipologia}: {sustainability} >= {SOGLIA_CO2[tipologia]}")
+            return
+        token = (SOGLIA_CO2[tipologia] - sustainability)/SOGLIA_CO2[tipologia]*100  # Calcola i token in base alla sostenibilità
+        print(f"Token calcolati: {token} per {tipologia} con sostenibilità {sustainability}")
         # Controllo che nessun campo sia vuoto
-        if not all([email, password, iva, nome, tipologia, indirizzo, telefono, ragioneSociale, sustainability]):
+        if not all([email, password, iva, nome, tipologia, indirizzo, telefono, ragioneSociale, sustainability, address]): # Controllo che nessun campo sia vuoto
             self.ui.register_signalError.setText('Ci sono degli spazi vuoti')
             return
 
         # Chiamata alla funzione nel database
         try:
             # Registrazione dell'utente
-            self.database.registra_utente(email, password, iva, nome, tipologia, indirizzo, telefono, ragioneSociale, sustainability)
+            self.database.registra_utente(email, password, iva, nome, tipologia, indirizzo, telefono, ragioneSociale, sustainability, address)
             self.ui.register_signalError.setText('Registrazione avvenuta con successo!')
 
             # Login automatico dopo la registrazione
@@ -366,7 +388,7 @@ class FinestraPrincipale(QMainWindow):
                     self.ui.label_home_name.setText(utente['nome'])
                     self.ui.label_home_nft.setText(str(utente['nft']))
                     self.ui.label_home_token.setText(str(utente['token']))
-                    self.ui.label_home_sustainability.setText(str(utente['sustainability']))
+                    self.mint_tokens(token) # Mint dei token appena registrato
 
                 # Cambio di pagina alla home
                 self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_dashboard)
@@ -414,7 +436,6 @@ class FinestraPrincipale(QMainWindow):
         if not all([email, password]):
             self.ui.login_signalError.setText('Email o password non inseriti correttamente')
             return
-
         
         try:
             # Verifica che le credenziali siano corrette
@@ -424,15 +445,15 @@ class FinestraPrincipale(QMainWindow):
                 if utente:
                     # Aggiorna la UI con i dati dell'utente
                     self.ui.login_signalError.setText('Login avvenuto con successo!')
+                    self.ui.azioniNormali_helpButton.hide()  # Nascondi il pulsante di aiuto per le azioni normali
 
                     # Passa alla pagina home o alla pagina successiva
                     self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_dashboard)
                     self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_home)
                     self.ui.label_welcome.setText("Welcome back, ")
                     self.ui.label_home_name.setText(utente['nome'])
-                    self.ui.label_home_nft.setText(str(utente['nft']))
-                    self.ui.label_home_token.setText(str(utente['token']))
-                    self.ui.label_home_sustainability.setText(str(utente['sustainability']))
+                    nft_count = self.conta_nft_posseduti()
+                    self.ui.label_home_nft.setText(str(nft_count))
 
                     # Riempi la pagina profilo
                     self.ui.label_profilo_email.setText(utente['email'])
@@ -460,6 +481,7 @@ class FinestraPrincipale(QMainWindow):
                     self.popola_combobox_immagini()  # Popola la comboBox delle immagini
                     self.popola_combobox_certificazioni()  # Popola la comboBox delle certificazioni
                     self.popola_nft_widget()  # Popola la pagina NFT con gli NFT dell'utente
+                    self.popola_utenti_who_need()  # Popola la pagina utenti che hanno bisogno di token
                 else:
                     self.ui.login_signalError.setText("Errore: Impossibile recuperare i dati dell'utente.")
             else:
@@ -477,7 +499,6 @@ class FinestraPrincipale(QMainWindow):
         self.ui.label_home_name.setText("")
         self.ui.label_home_nft.setText("")
         self.ui.label_home_token.setText("")
-        self.ui.label_home_sustainability.setText("")
 
         # Torna alla schermata di login
         self.ui.stackedWidgetEsterno.setCurrentWidget(self.ui.page_welcome)
@@ -583,8 +604,6 @@ class FinestraPrincipale(QMainWindow):
         elif delta < 0:
             azione_token = "burn"
             self.burn_tokens(token)
-            self.ui.azioniNormali_TxHashLabel.setText(f"Token bruciati: {token}")
-            self.aggiorna_risparmio_co2_nft(nft, token, "burn")
         else:
             azione_token = "neutro"
             self.ui.azioniNormali_TxHashLabel.setText("Nessuna azione necessaria: emissioni attese e registrate coincidono.")
@@ -617,8 +636,8 @@ class FinestraPrincipale(QMainWindow):
                 return
 
             tx_hash = self.contract.mint_tokens(address, amount)
-            self.ui.mintingLabel.setText(f"Transazione inviata: {tx_hash}")
-            self.ui.burningLabel.setText(f"")
+            #self.ui.mintingLabel.setText(f"Transazione inviata: {tx_hash}")
+            #self.ui.burningLabel.setText(f"")
             print(f"Mintati {amount} token per {address}")
             self.check_balance()
 
@@ -633,6 +652,7 @@ class FinestraPrincipale(QMainWindow):
         id = str(utente['id']).strip()
         # amount_str = self.ui.amountInput.text().strip()
         amount = token
+        nft = self.ui.azioniNormali_NFTcomboBox.currentText().strip()
         address = self.database.get_address(id)
 
         if not self.is_valid_address(address):
@@ -651,43 +671,90 @@ class FinestraPrincipale(QMainWindow):
             burn_amount = -amount
             tx_hash = self.contract.mint_tokens(address, burn_amount)
 
-            self.ui.burningLabel.setText(f"🔥 Token bruciati! TX hash: {tx_hash}")
-            self.ui.mintingLabel.setText("")
+            #self.ui.burningLabel.setText(f"🔥 Token bruciati! TX hash: {tx_hash}")
+            #self.ui.mintingLabel.setText("")
             self.check_balance()
+            self.ui.azioniNormali_TxHashLabel.setText(f"Token bruciati: {token}")
+            self.aggiorna_risparmio_co2_nft(nft, token, "burn")
 
         except ValueError:
-            self.ui.burningLabel.setText("Errore: L'importo deve essere un numero valido.")
+            self.ui.azioniNormali_TxHashLabel.setText("Errore: L'importo deve essere un numero valido.")
+            #self.ui.burningLabel.setText("Errore: L'importo deve essere un numero valido.")
             print(f"Errore durante la conversione dell'importo: '{token}'")
         except Exception as e:
-            self.ui.burningLabel.setText(f"Errore durante il burn: {str(e)}")
+            #self.ui.burningLabel.setText(f"Errore durante il burn: {str(e)}")
+            balance = self.contract.get_balance(address)
+            needed_tokens = round(abs(balance - token), 2)
+            self.needed_tokens = needed_tokens  # salva il valore
             
+            self.ui.azioniNormali_TxHashLabel.setText(f"Errore durante il burn: non hai abbastanza token.\nTi mancano {needed_tokens} token.\nPuoi richiedere aiuto cliccando sul pulsante di aiuto.")
+            self.ui.azioniNormali_helpButton.show()  # Mostra il pulsante di aiuto se il burn fallisce
+            
+    def help_tokens(self):
+        '''Funzione che si attiva quando l'utente non ha token e clicca su "Aiuto"'''
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        current_need = float(utente['need_token'])
+
+        # Confronto robusto per evitare problemi con i float
+        if abs(self.needed_tokens - current_need) > 0.001:
+            aggiornato = self.database.help_token(id, self.needed_tokens)
+            if aggiornato:
+                self.ui.azioniNormali_TxHashLabel.setText(f"Aiuto richiesto! Saranno richiesti {self.needed_tokens:.2f} token.")
+            else:
+                self.ui.azioniNormali_TxHashLabel.setText("Errore nella richiesta di aiuto.")
+        else:
+            self.ui.azioniNormali_TxHashLabel.setText(f"Hai già richiesto aiuto. Ti servono {current_need:.2f} token.")
+            
+    def popola_utenti_who_need(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        utenti = self.database.get_needed_users(id)
+        self.ui.transaction_recipientComboBox.clear()
+        for u in utenti:
+            print(f"{u['id']} - {u['nome']} - {u['address']} richiede {u['need_token']} token")
+            self.ui.transaction_recipientComboBox.addItem(f"{u['id']} - {u['nome']} - {u['address']} - ({u['need_token']} token)")
+        
     def transfer_tokens(self):
         utente = self.database.get_utente_per_id()
         id_from = str(utente['id']).strip()
-        id_to = self.ui.transaction_recipientInput.text().strip()
+
+        testo_combo = self.ui.transaction_recipientComboBox.currentText().strip()
         amount_str = self.ui.transaction_amountInput.text().strip()
-        private_key = self.ui.transaction_privateKeyInput.text().strip()  # devi averlo nell'interfaccia
+        private_key = self.ui.transaction_privateKeyInput.text().strip()
 
-        address_from = self.database.get_address(id_from)
-        address_to = self.database.get_address(id_to)
-
-        if not address_from or not address_to:
-            self.ui.transferLabel.setText("Errore: ID utente non valido o mancante.")
-            return
-
-        if not self.is_valid_address(address_from) or not self.is_valid_address(address_to):
-            self.ui.transferLabel.setText("Errore: Uno degli indirizzi Ethereum non è valido.")
+        # ⚠️ Controllo che tutti i campi siano compilati
+        if not testo_combo or not amount_str or not private_key:
+            self.ui.transferLabel.setText("Errore: Compila tutti i campi obbligatori.")
             return
 
         try:
+            id_to = testo_combo.split(" - ")[0].strip()
+            match = re.search(r"\(([\d.]+)\s+token\)", testo_combo)
+            needed_token = float(match.group(1)) if match else 0.0
+
+            address_from = self.database.get_address(id_from)
+            address_to = self.database.get_address(id_to)
+
+            if not self.is_valid_address(address_from) or not self.is_valid_address(address_to):
+                self.ui.transferLabel.setText("Errore: Uno degli indirizzi Ethereum non è valido.")
+                return
+
             amount = round(float(amount_str.replace(",", ".")), 2)
-            if amount <= 0:
-                self.ui.transferLabel.setText("Errore: L'importo deve essere maggiore di zero.")
+            if amount < needed_token:
+                self.ui.transferLabel.setText(
+                    f"Errore: Devi trasferire almeno {needed_token:.2f} token."
+                )
                 return
 
             tx_hash = self.contract.transfer_tokens(address_from, private_key, address_to, amount)
             self.check_balance()
+            self.database.reset_need_token(id_to)
+            self.popola_utenti_who_need()
             self.ui.transferLabel.setText(f"✅ Token inviati! TX hash: {tx_hash}")
+
+        except ValueError:
+            self.ui.transferLabel.setText("Errore: L'importo inserito non è valido.")
         except Exception as e:
             self.ui.transferLabel.setText(f"Errore nel trasferimento: {str(e)}")
 
@@ -734,6 +801,8 @@ class FinestraPrincipale(QMainWindow):
         if from_address and private_key and to_address and token_id >= 0:
             tx_hash = self.nft_contract.transfer_product_nft(from_address, to_address, token_id, private_key)
             self.ui.text_output.append(f"Trasferito! TX: {tx_hash}")
+            nft_count = self.conta_nft_posseduti()
+            self.ui.label_home_nft.setText(str(nft_count))
 
     def show_history(self):
         token_id = int(self.ui.input_tokenid.text().strip())
@@ -810,6 +879,9 @@ class FinestraPrincipale(QMainWindow):
         # Log/GUI
         self.ui.text_output.append(f"✅ NFT registrato!\nToken ID: {token_id}\nTX Hash: {tx_hash}")
         self.popola_nft_widget()  # Popola la pagina NFT con gli NFT dell'utente
+        self.popola_combobox_NFT()  # Popola la comboBox degli NFT
+        nft_count = self.conta_nft_posseduti()
+        self.ui.label_home_nft.setText(str(nft_count))
         self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_NFT)
         
         # Pulisce i campi dopo la creazione
@@ -850,10 +922,12 @@ class FinestraPrincipale(QMainWindow):
         
     def transferNFT(self, token_id):
         utente = self.database.get_utente_per_id()
-        id = str(utente['id']).strip()
-        from_address = self.database.get_address(id)
+        id_from = str(utente['id']).strip()
+        from_address = self.database.get_address(id_from)
         
-        to_address = self.ui.transferNFT_inputTransferTo.text().strip()
+        id_to = self.ui.transferNFT_inputTransferTo.text().strip()
+        to_address = self.database.get_address(id_to)
+        
         private_key = self.ui.transferNFT_inputPrivateKey.text().strip()
         token_id = int(self.selected_token_id)
 
@@ -861,6 +935,73 @@ class FinestraPrincipale(QMainWindow):
             tx_hash = self.nft_contract.transfer_product_nft(from_address, to_address, token_id, private_key)
             # self.ui.text_output.append(f"Trasferito! TX: {tx_hash}")
             print(f"Trasferito NFT con ID {token_id} da {from_address} a {to_address}. TX: {tx_hash}")
+
+            # 🔁 Aggiorna il campo owner nel file JSON
+            self.aggiorna_owner_json_nft(token_id, to_address)
+
+            # 🔁 Ricarica interfaccia
+            self.popola_nft_widget()
+            self.popola_combobox_NFT()  # Popola la comboBox degli NFT
+            
+            nft_count = self.conta_nft_posseduti()
+            self.ui.label_home_nft.setText(str(nft_count))
+        
+    def aggiorna_owner_json_nft(self, token_id, nuovo_owner):
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        metadata_dir = os.path.join(base_dir, "nft_metadata")
+        
+
+        for f in os.listdir(metadata_dir):
+            if f.endswith('.json'):
+                path = os.path.join(metadata_dir, f)
+                try:
+                    with open(path, 'r') as file:
+                        data = json.load(file)
+                        if int(data.get("token_id", -1)) == token_id:
+                            data["owner"] = nuovo_owner
+                            
+                            history = self.nft_contract.get_ownership_history(token_id)
+                            data["ownership_history"] = history
+                            
+                            # Salva il JSON aggiornato
+                            with open(path, 'w') as out:
+                                json.dump(data, out, indent=2)
+                            
+                            print(f"✅ Owner e history aggiornati in {f} → {nuovo_owner}")
+                            return
+                        
+                except Exception as e:
+                    print(f"⚠️ Errore nel file {f}: {e}")
+
+        print(f"❌ Nessun file JSON trovato per token_id {token_id}")
+        
+    def conta_nft_posseduti(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        address = self.database.get_address(id).lower()
+
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        metadata_dir = os.path.join(base_dir, "nft_metadata")
+
+        count = 0
+
+        if not os.path.exists(metadata_dir):
+            print("❌ Cartella nft_metadata non trovata.")
+            return 0
+
+        for f in os.listdir(metadata_dir):
+            if f.endswith('.json'):
+                path = os.path.join(metadata_dir, f)
+                try:
+                    with open(path, 'r') as file:
+                        data = json.load(file)
+                        if data.get("owner", "").lower() == address:
+                            count += 1
+                except Exception as e:
+                    print(f"⚠️ Errore leggendo {f}: {e}")
+                    continue
+
+        return count
         
 if __name__ == "__main__":
      app = QApplication(sys.argv)

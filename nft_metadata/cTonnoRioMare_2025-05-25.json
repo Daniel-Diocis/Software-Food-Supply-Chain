@@ -1,0 +1,18 @@
+{
+  "name": "cTonnoRioMare",
+  "description": "Tonno pescato in barca",
+  "image": "assets/tonno.png",
+  "origin": "barca a vela",
+  "producer": "amico",
+  "certification": "assets/certifications/pesce-sostenibile.png",
+  "quantity": "20 kg",
+  "harvest_date": "2025-05-25",
+  "expiry_date": "2025-05-30",
+  "owner": "0xEE029bC2728537A1E2387aAa558207bBe6f70203",
+  "risparmio_co2": 17.0,
+  "usable": true,
+  "token_id": 23,
+  "ownership_history": [
+    "0xEE029bC2728537A1E2387aAa558207bBe6f70203"
+  ]
+}
