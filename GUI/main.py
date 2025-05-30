@@ -63,6 +63,7 @@ class FinestraPrincipale(QMainWindow):
         self.ui.btn_transfer.clicked.connect(self.transfer_nft)
         self.ui.btn_history.clicked.connect(self.show_history)
         self.ui.mintNFT_mintNFTbutton.clicked.connect(self.crea_json_nft)
+        self.ui.mergeNFT_mergeNFTButton.clicked.connect(self.crea_merged_json_nft)
         self.ui.azioniNormali_eseguiButton.clicked.connect(self.esegui_azioneNormale)
         self.ui.azioniCompensative_mintingButton.clicked.connect(self.esegui_azioneCompensativa)
         self.ui.transferNFT_btnTransfer.clicked.connect(self.transferNFT)
@@ -92,7 +93,8 @@ class FinestraPrincipale(QMainWindow):
         self.ui.bt_azioniCompensative.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_azioniCompensative))
         self.ui.bt_transazioni.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_transazioni))
         self.ui.bt_NFT.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_NFT))
-        self.ui.pushButton.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_mintNFT))
+        self.ui.NFT_mintNFT.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_mintNFT))
+        self.ui.NFT_mergeNFT.clicked.connect(lambda: self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_mergeNFT))
     
     def carica_combo_azioni(self):
         azioni = self.database.carica_azioni_nella_combobox()
@@ -165,6 +167,25 @@ class FinestraPrincipale(QMainWindow):
         self.ui.azioniNormali_NFTcomboBox.addItems(nft)
         print(f"✅ Caricate {len(nft)} nft nella comboBox.")
         print(">>> Fine popolamento comboBox nft")
+        
+    def popola_nft_per_fusione(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        address = self.database.get_address(id)
+
+        self.ui.fusionListWidget.clear()
+        metadata_dir = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')), "nft_metadata")
+
+        for file in os.listdir(metadata_dir):
+            if file.endswith(".json"):
+                path = os.path.join(metadata_dir, file)
+                with open(path, 'r') as f:
+                    try:
+                        data = json.load(f)
+                        if data.get("owner", "").lower() == address.lower() and data.get("usable", True):
+                            self.ui.fusionListWidget.addItem(file)  # Aggiunge direttamente il path completo
+                    except:
+                        continue
     
     def popola_combobox_immagini(self):
         print(">>> Inizio popolamento comboBox immagini")
@@ -201,6 +222,42 @@ class FinestraPrincipale(QMainWindow):
         self.ui.mintNFT_imagecomboBox.addItems(immagini)
         print(f"✅ Caricate {len(immagini)} immagini nella comboBox.")
         print(">>> Fine popolamento comboBox immagini")
+        
+    def popola_mergeNFT_combobox_immagini(self):
+        print(">>> Inizio popolamento mergeNFT comboBox immagini")
+
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        print(f"Percorso base calcolato: {base_dir}")
+
+        assets_merged_dir = os.path.join(base_dir, "assets/merged")
+        print(f"Percorso completo assets/merged: {assets_merged_dir}")
+
+        if not os.path.exists(assets_merged_dir):
+            print(f"⚠️  Cartella assets/merged NON trovata in: {assets_merged_dir}")
+            return
+
+        print(f"✅ Cartella assets/merged trovata")
+
+        estensioni_immagini = ('.png', '.jpg', '.jpeg', '.gif')
+        immagini = []
+
+        for f in os.listdir(assets_merged_dir):
+            print(f"Esaminando file: {f}")
+            if f.lower().endswith(estensioni_immagini):
+                immagini.append(f)
+                print(f"➕ Aggiunto: {f}")
+            else:
+                print(f"❌ Ignorato (non immagine): {f}")
+
+        if not immagini:
+            print("⚠️  Nessuna immagine valida trovata nella cartella assets/merged.")
+        else:
+            print(f"🎉 Immagini trovate: {immagini}")
+
+        self.ui.mergeNFT_imagecomboBox.clear()
+        self.ui.mergeNFT_imagecomboBox.addItems(immagini)
+        print(f"✅ Caricate {len(immagini)} immagini nella merged_comboBox.")
+        print(">>> Fine popolamento merged_comboBox immagini")
         
     def popola_combobox_certificazioni(self):
         print(">>> Inizio popolamento comboBox certificazioni")
@@ -478,10 +535,13 @@ class FinestraPrincipale(QMainWindow):
                     
                     self.carica_combo_azioni()  # Popola la comboBox delle azioni
                     self.popola_combobox_NFT()  # Popola la comboBox degli NFT
+                    self.popola_nft_per_fusione()  # Popola la lista degli NFT per fusione
                     self.popola_combobox_immagini()  # Popola la comboBox delle immagini
+                    self.popola_mergeNFT_combobox_immagini()  # Popola la comboBox delle immagini per la fusione NFT
                     self.popola_combobox_certificazioni()  # Popola la comboBox delle certificazioni
                     self.popola_nft_widget()  # Popola la pagina NFT con gli NFT dell'utente
                     self.popola_utenti_who_need()  # Popola la pagina utenti che hanno bisogno di token
+                    self.popola_utenti_transfer_nft() # Popola la pagina transferNFT con gli altri utenti
                 else:
                     self.ui.login_signalError.setText("Errore: Impossibile recuperare i dati dell'utente.")
             else:
@@ -741,15 +801,15 @@ class FinestraPrincipale(QMainWindow):
                 return
 
             amount = round(float(amount_str.replace(",", ".")), 2)
-            if amount < needed_token:
-                self.ui.transferLabel.setText(
-                    f"Errore: Devi trasferire almeno {needed_token:.2f} token."
-                )
+            if amount <= 0:
+                self.ui.transferLabel.setText("Errore: L'importo deve essere maggiore di zero.")
                 return
 
             tx_hash = self.contract.transfer_tokens(address_from, private_key, address_to, amount)
             self.check_balance()
-            self.database.reset_need_token(id_to)
+
+            # ✅ Aggiorna il bisogno parzialmente
+            self.database.decrementa_need_token(id_to, amount)
             self.popola_utenti_who_need()
             self.ui.transferLabel.setText(f"✅ Token inviati! TX hash: {tx_hash}")
 
@@ -880,6 +940,7 @@ class FinestraPrincipale(QMainWindow):
         self.ui.text_output.append(f"✅ NFT registrato!\nToken ID: {token_id}\nTX Hash: {tx_hash}")
         self.popola_nft_widget()  # Popola la pagina NFT con gli NFT dell'utente
         self.popola_combobox_NFT()  # Popola la comboBox degli NFT
+        self.popola_nft_per_fusione() # Popola la lista degli NFT per fusione
         nft_count = self.conta_nft_posseduti()
         self.ui.label_home_nft.setText(str(nft_count))
         self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_NFT)
@@ -894,6 +955,95 @@ class FinestraPrincipale(QMainWindow):
         self.ui.mintNFT_quantityfield.clear()
         self.ui.mintNFT_harvestdate.setDate(QtCore.QDate.currentDate())
         self.ui.mintNFT_expirydate.setDate(QtCore.QDate.currentDate())
+        
+    def crea_merged_json_nft(self):
+        # Recupera dati base
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        address = self.database.get_address(id)
+        nome = self.ui.mergeNFT_namefield.text().strip()
+        descrizione = self.ui.mergeNFT_descriptionfield.toPlainText().strip()
+        immagine = self.ui.mergeNFT_imagecomboBox.currentText().strip()
+        selected_paths = self.get_selected_nft_paths()
+
+        if not nome or not immagine or not selected_paths:
+            self.ui.text_output.append("❌ Errore: Nome, immagine o NFT selezionati mancanti.")
+            return
+
+        # Percorso cartella nft_metadata
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        metadata_dir = os.path.join(base_dir, "nft_metadata")
+        os.makedirs(metadata_dir, exist_ok=True)
+
+        # Calcola totale CO2 e aggiorna gli NFT originali come non utilizzabili
+        saldo_co2 = 0
+        merged_from = []
+
+        for path in selected_paths:
+            try:
+                with open(path, 'r+') as f:
+                    data = json.load(f)
+                    saldo_co2 += float(data.get("risparmio_co2", 0))
+                    data["usable"] = False
+                    f.seek(0)
+                    json.dump(data, f, indent=2)
+                    f.truncate()
+                    merged_from.append(os.path.basename(path))
+            except Exception as e:
+                self.ui.text_output.append(f"⚠️ Errore durante la modifica di {path}: {e}")
+
+        # Crea JSON del nuovo NFT
+        json_data = {
+            "name": nome,
+            "description": descrizione,
+            "image": f"assets/merged/{immagine}",
+            "owner": address,
+            "risparmio_co2": saldo_co2,
+            "usable": True,
+            "merged_from": merged_from
+        }
+
+        nome_file = f"{nome.replace(' ', '_')}.json"
+        path_file = os.path.join(metadata_dir, nome_file)
+
+        with open(path_file, 'w') as f:
+            json.dump(json_data, f, indent=2)
+
+        print(f"✅ JSON NFT creato in: {path_file}")
+
+        # 🔥 MINT e AGGIORNA JSON con tokenId e ownershipHistory
+        tx_hash, token_id = self.nft_contract.mint_product_nft(address, path_file)
+        print(f"✅ Mintato NFT con ID {token_id} per {address}. TX: {tx_hash}")
+        print(f"NFT fusi: {', '.join(merged_from)}")
+
+        # 📜 Ottieni lo storico dei possessori
+        history = self.nft_contract.get_ownership_history(token_id)
+
+        with open(path_file, 'r+') as f:
+            updated_data = json.load(f)
+            updated_data["token_id"] = token_id
+            updated_data["ownership_history"] = history
+            f.seek(0)
+            json.dump(updated_data, f, indent=2)
+            f.truncate()
+
+        # Log/GUI
+        self.ui.text_output.append(f"✅ NFT registrato!\nToken ID: {token_id}\nTX Hash: {tx_hash}")
+        self.popola_nft_widget()
+        self.popola_combobox_NFT()
+        nft_count = self.conta_nft_posseduti()
+        self.ui.label_home_nft.setText(str(nft_count))
+        self.ui.stackedWidgetInterno.setCurrentWidget(self.ui.page_NFT)
+        self.ui.mergeNFT_namefield.clear()
+        self.ui.mergeNFT_descriptionfield.clear()
+        self.ui.mergeNFT_imagecomboBox.setCurrentIndex(0)
+        self.popola_nft_per_fusione()
+
+    def get_selected_nft_paths(self):
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        metadata_dir = os.path.join(base_dir, "nft_metadata")
+        selected_items = self.ui.fusionListWidget.selectedItems()
+        return [os.path.join(metadata_dir, item.text()) for item in selected_items]
         
     def aggiorna_risparmio_co2_nft(self, json_filename, delta_token, operazione):
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -920,12 +1070,21 @@ class FinestraPrincipale(QMainWindow):
         except Exception as e:
             print(f"❌ Errore aggiornando risparmio_co2 per {json_filename}: {e}")
         
+    def popola_utenti_transfer_nft(self):
+        utente = self.database.get_utente_per_id()
+        id = str(utente['id']).strip()
+        utenti = self.database.get_users(id)
+        self.ui.transferNFT_recipientComboBox.clear()
+        for u in utenti:
+            print(f"{u['id']} - {u['nome']} - {u['address']}")
+            self.ui.transferNFT_recipientComboBox.addItem(f"{u['id']} - {u['nome']} - {u['address']}")
+        
     def transferNFT(self, token_id):
         utente = self.database.get_utente_per_id()
         id_from = str(utente['id']).strip()
         from_address = self.database.get_address(id_from)
         
-        id_to = self.ui.transferNFT_inputTransferTo.text().strip()
+        id_to = self.ui.transferNFT_recipientComboBox.currentText().strip().split(" - ")[0].strip()
         to_address = self.database.get_address(id_to)
         
         private_key = self.ui.transferNFT_inputPrivateKey.text().strip()

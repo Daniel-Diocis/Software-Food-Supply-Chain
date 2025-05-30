@@ -43,7 +43,7 @@
       color: white;
       padding: 8px 20px;
      }
-     QLineEdit, QComboBox, QDoubleSpinBox, QSpinBox,  QDateEdit {
+     QLineEdit, QComboBox, QDoubleSpinBox, QSpinBox,  QDateEdit, QListWidget {
       background-color: #212121;
       border: 1px solid #424242;
       color: white;
@@ -1643,7 +1643,7 @@ COMPENSATIVE</string>
         <item>
          <widget class="QStackedWidget" name="stackedWidgetInterno">
           <property name="currentIndex">
-           <number>4</number>
+           <number>9</number>
           </property>
           <widget class="QWidget" name="page_home">
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -2661,9 +2661,16 @@ COMPENSATIVE</string>
           <widget class="QWidget" name="page_NFT">
            <layout class="QVBoxLayout" name="verticalLayout_16">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="NFT_mintNFT">
               <property name="text">
                <string>Mint NFT</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="NFT_mergeNFT">
+              <property name="text">
+               <string>Merge NFT</string>
               </property>
              </widget>
             </item>
@@ -2678,7 +2685,7 @@ COMPENSATIVE</string>
                  <x>0</x>
                  <y>0</y>
                  <width>815</width>
-                 <height>538</height>
+                 <height>491</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_15">
@@ -3363,6 +3370,236 @@ COMPENSATIVE</string>
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="page_mergeNFT">
+           <layout class="QVBoxLayout" name="verticalLayout_22">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_81">
+              <item>
+               <spacer name="horizontalSpacer_70">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_57">
+                <property name="text">
+                 <string>Name: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="mergeNFT_namefield">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_116">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_92">
+              <item>
+               <spacer name="horizontalSpacer_117">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_62">
+                <property name="text">
+                 <string>Description: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="mergeNFT_descriptionfield">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">      background-color: #212121;
+      border: 1px solid #424242;
+      color: white;
+      padding: 5px;
+      font-size: 12pt;
+      border-radius: 5px;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_118">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_93">
+              <item>
+               <spacer name="horizontalSpacer_119">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_64">
+                <property name="text">
+                 <string>Image: </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="mergeNFT_imagecomboBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_120">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_94">
+              <item>
+               <spacer name="horizontalSpacer_122">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QListWidget" name="fusionListWidget">
+                <property name="selectionMode">
+                 <enum>QAbstractItemView::MultiSelection</enum>
+                </property>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectRows</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_121">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_95">
+              <item>
+               <spacer name="horizontalSpacer_123">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="mergeNFT_mergeNFTButton">
+                <property name="text">
+                 <string>Merge NFT</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_147">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
           <widget class="QWidget" name="page_transferNFT">
            <layout class="QVBoxLayout" name="verticalLayout_21">
             <item>
@@ -3384,17 +3621,17 @@ COMPENSATIVE</string>
               <item>
                <widget class="QLabel" name="label_54">
                 <property name="text">
-                 <string>Immetti l'id del destinatario: </string>
+                 <string>Seleziona il destinatario: </string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="transferNFT_inputTransferTo">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>40</height>
-                 </size>
+               <widget class="QComboBox" name="transferNFT_recipientComboBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
                </widget>
               </item>

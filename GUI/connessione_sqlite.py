@@ -215,6 +215,23 @@ class Comunicazione():
         else:
             return None
         
+    def get_users(self, id):
+        """Restituisce tutti gli utenti, escluso l'utente con l'id passato"""
+        cursor = self.connessione.cursor()
+        cursor.execute(
+            "SELECT id, nome, address FROM tabella_utenti WHERE id != ?",
+            (id,)
+        )
+        results = cursor.fetchall()
+        cursor.close()
+
+        utenti = [{'id': r[0], 'nome': r[1], 'address': r[2]} for r in results]
+
+        if not utenti:
+            print("Nessun utente trovato (escluso il richiedente).")
+
+        return utenti
+        
     def get_needed_users(self, id):
         """Restituisce tutti gli utenti che hanno bisogno di token, escluso l'utente con l'id passato"""
         cursor = self.connessione.cursor()
@@ -231,6 +248,18 @@ class Comunicazione():
             print("Nessun utente trovato che ha bisogno di token (escluso il richiedente).")
 
         return utenti
+    
+    def decrementa_need_token(self, id, amount):
+        cursor = self.connessione.cursor()
+        cursor.execute("SELECT need_token FROM tabella_utenti WHERE id = ?", (id,))
+        result = cursor.fetchone()
+        
+        if result is not None:
+            nuovo_valore = float(result[0]) - float(amount)
+            nuovo_valore = max(0.0, round(nuovo_valore, 2))  # Non scendere sotto 0
+            cursor.execute("UPDATE tabella_utenti SET need_token = ? WHERE id = ?", (nuovo_valore, id))
+            self.connessione.commit()
+        cursor.close()
     
     def reset_need_token(self, id):
         """Reimposta il campo need_token a 0.0 per l'utente specificato"""

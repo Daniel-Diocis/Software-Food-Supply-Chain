@@ -1,0 +1,18 @@
+{
+  "name": "fPasta",
+  "description": "pasta fatta in casa\nbio\nbios",
+  "image": "assets/pasta.png",
+  "origin": "Casa",
+  "producer": "Mamma",
+  "certification": "assets/certifications/agricoltura-biologica.png",
+  "quantity": "10 kg",
+  "harvest_date": "2025-05-29",
+  "expiry_date": "2026-12-31",
+  "owner": "0x9ce2cC33b028Bc6E9b0B4b26c8334368494541bf",
+  "risparmio_co2": -5.2,
+  "usable": false,
+  "token_id": 26,
+  "ownership_history": [
+    "0x9ce2cC33b028Bc6E9b0B4b26c8334368494541bf"
+  ]
+}
