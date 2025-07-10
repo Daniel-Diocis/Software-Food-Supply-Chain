@@ -1,0 +1,18 @@
+{
+  "name": "Tonno Nostrano",
+  "description": "Tonno sostenibile pescato nel nostro mare Adriatico",
+  "image": "assets/tonno.png",
+  "origin": "Mare Adriatico",
+  "producer": "Fratelli del mare",
+  "certification": "assets/certifications/pesce-sostenibile.png",
+  "quantity": "200 kg",
+  "harvest_date": "2025-06-26",
+  "expiry_date": "2025-07-17",
+  "owner": "0x2406e2A6E33044c36dA92D9765e5b9Ace22EA62C",
+  "risparmio_co2": 2.8,
+  "usable": false,
+  "token_id": 31,
+  "ownership_history": [
+    "0x2406e2A6E33044c36dA92D9765e5b9Ace22EA62C"
+  ]
+}

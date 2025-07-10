@@ -1,0 +1,16 @@
+{
+  "name": "PastaConTonno",
+  "description": "Pasta con tonno fatta con pasta bio e tonno nostrano sostenendo l'agricoltura e la pesca nel rispetto della natura e dell'ecosistema",
+  "image": "assets/merged/pastaConTonno.png",
+  "owner": "0x2406e2A6E33044c36dA92D9765e5b9Ace22EA62C",
+  "risparmio_co2": -136.7,
+  "usable": true,
+  "merged_from": [
+    "PastaBio_2025-07-10.json",
+    "Tonno_Nostrano_2025-06-26.json"
+  ],
+  "token_id": 33,
+  "ownership_history": [
+    "0x2406e2A6E33044c36dA92D9765e5b9Ace22EA62C"
+  ]
+}
